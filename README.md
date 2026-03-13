@@ -2,6 +2,8 @@
 
 Unified model governance for UK insurance pricing teams. Combines PRA SS1/23 statistical validation and model risk management into one package.
 
+Merged from: `insurance-validation` (PRA SS1/23 validation reports) and `insurance-mrm` (model risk management).
+
 The problem this solves: validation tests and MRM governance packs were built separately and had separate installs, separate version pinning, and separate import paths. Pricing teams either installed both and managed the coupling themselves, or skipped one. This package resolves that by providing a single install.
 
 ## Subpackages
@@ -23,8 +25,14 @@ pip install insurance-governance
 ## Quick start
 
 ```python
-from insurance_governance.validation import ModelValidationReport, ModelCard as ValidationModelCard
-from insurance_governance.mrm import ModelCard as MRMModelCard, RiskTierScorer, ModelInventory, GovernanceReport
+from insurance_governance import (
+    ModelValidationReport,
+    ValidationModelCard,
+    MRMModelCard,
+    RiskTierScorer,
+    ModelInventory,
+    GovernanceReport,
+)
 
 # Run statistical validation
 card = ValidationModelCard(
@@ -37,7 +45,7 @@ card = ValidationModelCard(
     limitations=["No telematics data"],
     owner="Pricing Team",
 )
-report = ModelValidationReport(model_card=card, y_val=y_val, y_pred_val=y_pred_val, ...)
+report = ModelValidationReport(model_card=card, y_val=y_val, y_pred_val=y_pred_val)
 report.generate("validation_report.html")
 
 # MRM governance pack
@@ -49,15 +57,26 @@ mrm_card = MRMModelCard(
     intended_use="Frequency pricing for private motor.",
 )
 scorer = RiskTierScorer()
-tier = scorer.score(gwp_impacted=125_000_000, model_complexity="high", ...)
+tier = scorer.score(gwp_impacted=125_000_000, model_complexity="high")
 GovernanceReport(card=mrm_card, tier=tier).save_html("mrm_pack.html")
+```
+
+Or import from subpackages directly:
+
+```python
+from insurance_governance.validation import ModelValidationReport, ModelCard as ValidationModelCard
+from insurance_governance.mrm import ModelCard as MRMModelCard, RiskTierScorer, ModelInventory, GovernanceReport
 ```
 
 ## Note on ModelCard
 
 Both subpackages define a `ModelCard` class, but they serve different purposes:
 
-- `insurance_governance.validation.ModelCard` — Pydantic schema, anchors the statistical validation report, captures features, methodology, limitations.
-- `insurance_governance.mrm.ModelCard` — dataclass, anchors the MRM governance pack, captures assumptions, risk tier, Model Risk Committee metadata.
+- `insurance_governance.validation.ModelCard` (`ValidationModelCard` at top level) — Pydantic schema, anchors the statistical validation report, captures features, methodology, limitations.
+- `insurance_governance.mrm.ModelCard` (`MRMModelCard` at top level) — dataclass, anchors the MRM governance pack, captures assumptions, risk tier, Model Risk Committee metadata.
 
-Import with explicit aliases to avoid confusion.
+At the top level they are re-exported as `ValidationModelCard` and `MRMModelCard` to avoid ambiguity.
+
+## Licence
+
+MIT
