@@ -57,7 +57,14 @@ mrm_card = MRMModelCard(
     intended_use="Frequency pricing for private motor.",
 )
 scorer = RiskTierScorer()
-tier = scorer.score(gwp_impacted=125_000_000, model_complexity="high")
+tier = scorer.score(
+    gwp_impacted=125_000_000,
+    model_complexity="high",
+    deployment_status="champion",
+    regulatory_use=False,
+    external_data=False,
+    customer_facing=True,
+)
 GovernanceReport(card=mrm_card, tier=tier).save_html("mrm_pack.html")
 ```
 
