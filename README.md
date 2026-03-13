@@ -77,6 +77,21 @@ Both subpackages define a `ModelCard` class, but they serve different purposes:
 
 At the top level they are re-exported as `ValidationModelCard` and `MRMModelCard` to avoid ambiguity.
 
+## Capabilities Demo
+
+Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson frequency model, 60/20/20 temporal train/validation/test split. Full notebook: `notebooks/benchmark.py`.
+
+- Runs the full PRA SS1/23 validation suite in a single `ModelValidationReport` call: Gini coefficient with bootstrap 95% CI, 10-band lift chart, A/E by predicted decile with Poisson CI, Hosmer-Lemeshow goodness-of-fit, PSI on score distribution (train vs validation), monitoring plan completeness check — all returning `TestResult` objects with a pass/fail flag and human-readable detail
+- Computes an overall RAG status (Green/Amber/Red) from the worst-severity failure across all tests
+- Produces a self-contained HTML validation report and JSON sidecar, print-to-PDF ready, in under one second
+- Scores model risk tier via `RiskTierScorer`: 6 dimensions (GWP, model complexity, deployment status, regulatory use, external data, customer-facing) mapped to a 0-100 composite with documented rules per point — no subjective judgement required at the MRC presentation
+- Registers models in `ModelInventory` (JSON file, check into git alongside your code); records validation run history linked by `run_id`; lists overdue reviews
+- Generates a `GovernanceReport` executive committee pack (HTML + JSON) covering model purpose, risk tier rationale, last validation RAG, assumptions register with risk ratings, outstanding issues, approval conditions, and next review date
+
+**When to use:** You are subject to PRA SS1/23, have 10+ production pricing models, and want consistent, auditable validation and governance output rather than bespoke analyst notebooks that vary by model. Particularly useful before a PRA supervisory visit.
+
+**When NOT to use:** You need reserving or capital model governance — this package is scoped to pricing models. It also does not replace independent human review of validation results; it automates the tests, not the judgement.
+
 ## Licence
 
 MIT
