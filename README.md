@@ -92,6 +92,23 @@ Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson
 
 **When NOT to use:** You need reserving or capital model governance — this package is scoped to pricing models. It also does not replace independent human review of validation results; it automates the tests, not the judgement.
 
+## Performance
+
+Benchmarked on synthetic UK motor data — 50,000 policies, CatBoost Poisson frequency model, 60/20/20 temporal split. See `notebooks/benchmark.py` for the full demo workflow.
+
+| Task | Time |
+|------|------|
+| Full SS1/23 validation suite (9 tests) | < 5 seconds |
+| HTML validation report generation | < 1 second |
+| JSON sidecar generation | < 1 second |
+| RiskTierScorer.score() | < 1ms |
+| ModelInventory.register() | < 10ms |
+| GovernanceReport HTML generation | < 1 second |
+
+The computational cost of this library is negligible — it runs statistical tests on pre-computed predictions, not raw data. The bottleneck is always the model fitting that produces `y_pred_val`, not the governance layer. A team generating quarterly validation reports for 15 models can run the full suite in under 10 minutes of wall clock time, most of which is the CatBoost fits.
+
+The value is not in computation speed but in consistency: every model in the portfolio gets identical tests, identical thresholds, and identical output format. A pricing team relying on bespoke analyst notebooks has no guarantee that the Gini in one report means the same thing as the Gini in another.
+
 ## Licence
 
 MIT
