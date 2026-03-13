@@ -39,8 +39,11 @@ from __future__ import annotations
 
 import numpy as np
 
-# numpy.trapezoid was added in 2.0; fall back to numpy.trapz for older versions
-_trapezoid = getattr(np, "trapezoid", np.trapz)
+# numpy.trapezoid was added in 2.0; np.trapz was removed in 2.0
+try:
+    _trapezoid = np.trapezoid
+except AttributeError:
+    _trapezoid = np.trapz  # type: ignore[attr-defined]  # NumPy < 2.0
 from scipy import stats
 
 from .results import Severity, TestCategory, TestResult
