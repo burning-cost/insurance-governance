@@ -106,6 +106,11 @@ Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson
 
 **When NOT to use:** You need reserving or capital model governance — this package is scoped to pricing models. It also does not replace independent human review of validation results; it automates the tests, not the judgement.
 
+
+## Databricks Notebook
+
+A ready-to-run Databricks notebook benchmarking this library against standard approaches is available in [burning-cost-examples](https://github.com/burning-cost/burning-cost-examples/blob/main/notebooks/insurance_governance_demo.py).
+
 ## Performance
 
 Benchmarked on synthetic UK motor data — 50,000 policies, CatBoost Poisson frequency model, 60/20/20 temporal split. See `notebooks/benchmark.py` for the full demo workflow.
