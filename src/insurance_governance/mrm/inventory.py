@@ -54,11 +54,26 @@ def _load_registry(path: str) -> dict[str, Any]:
 
 
 def _save_registry(path: str, data: dict[str, Any]) -> None:
-    """Write registry to disk atomically (write to tmp then rename)."""
+    """Write registry to disk.
+
+    Attempts an atomic write (write to .tmp then rename) for safety.
+    Falls back to a direct write if the rename fails — this can happen
+    on some networked filesystems (e.g. Databricks serverless ephemeral NFS)
+    where os.replace raises PermissionError across mount boundaries.
+    """
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(data, fh, indent=2, cls=_Encoder)
-    os.replace(tmp, path)
+    try:
+        os.replace(tmp, path)
+    except (PermissionError, OSError):
+        # Fallback: direct write (non-atomic but sufficient for demo/serverless)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(data, fh, indent=2, cls=_Encoder)
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
 
 
 class ModelInventory:
