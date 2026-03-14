@@ -1,5 +1,10 @@
 # insurance-governance
 
+[![PyPI](https://img.shields.io/pypi/v/insurance-governance)](https://pypi.org/project/insurance-governance/)
+[![Python](https://img.shields.io/pypi/pyversions/insurance-governance)](https://pypi.org/project/insurance-governance/)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]()
+[![License](https://img.shields.io/badge/license-BSD--3-blue)]()
+
 Unified model governance for UK insurance pricing teams. Combines PRA SS1/23 statistical validation and model risk management into one package.
 
 Merged from: `insurance-validation` (PRA SS1/23 validation reports) and `insurance-mrm` (model risk management).
