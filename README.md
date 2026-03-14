@@ -123,6 +123,15 @@ The computational cost of this library is negligible — it runs statistical tes
 
 The value is not in computation speed but in consistency: every model in the portfolio gets identical tests, identical thresholds, and identical output format. A pricing team relying on bespoke analyst notebooks has no guarantee that the Gini in one report means the same thing as the Gini in another.
 
+
+## Related Libraries
+
+| Library | What it does |
+|---------|-------------|
+| [insurance-fairness](https://github.com/burning-cost/insurance-fairness) | Proxy discrimination auditing — fairness audit outputs are a required input to the governance sign-off pack |
+| [insurance-deploy](https://github.com/burning-cost/insurance-deploy) | Champion/challenger deployment with ENBP audit logging — governance documents the model; deploy manages its lifecycle |
+| [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | Model monitoring — ongoing monitoring evidence feeds into governance review cycles |
+
 ## Licence
 
 MIT
