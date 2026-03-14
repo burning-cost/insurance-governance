@@ -25,6 +25,7 @@ pip install insurance-governance
 ## Quick start
 
 ```python
+import numpy as np
 from insurance_governance import (
     ModelValidationReport,
     ValidationModelCard,
@@ -34,7 +35,13 @@ from insurance_governance import (
     GovernanceReport,
 )
 
-# Run statistical validation
+# --- Synthetic model outputs (replace with your real model predictions) ---
+rng = np.random.default_rng(42)
+n_val = 5_000
+y_val      = rng.poisson(0.08, n_val).astype(float)   # observed claim counts
+y_pred_val = np.clip(rng.normal(0.08, 0.02, n_val), 0.001, None)  # model predictions
+
+# --- Run statistical validation ---
 card = ValidationModelCard(
     name="Motor Frequency v3.2",
     version="3.2.0",
@@ -48,7 +55,7 @@ card = ValidationModelCard(
 report = ModelValidationReport(model_card=card, y_val=y_val, y_pred_val=y_pred_val)
 report.generate("validation_report.html")
 
-# MRM governance pack
+# --- MRM governance pack ---
 mrm_card = MRMModelCard(
     model_id="motor-freq-v3",
     model_name="Motor TPPD Frequency",
@@ -57,7 +64,14 @@ mrm_card = MRMModelCard(
     intended_use="Frequency pricing for private motor.",
 )
 scorer = RiskTierScorer()
-tier = scorer.score(gwp_impacted=125_000_000, model_complexity="high")
+tier = scorer.score(
+    gwp_impacted=125_000_000,
+    model_complexity="high",
+    deployment_status="champion",
+    regulatory_use=False,
+    external_data=False,
+    customer_facing=True,
+)
 GovernanceReport(card=mrm_card, tier=tier).save_html("mrm_pack.html")
 ```
 
