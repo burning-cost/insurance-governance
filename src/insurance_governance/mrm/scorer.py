@@ -41,23 +41,20 @@ from typing import Any, Optional
 
 TIER_LABELS = {
     1: "Critical",
-    2: "High",
-    3: "Medium",
-    4: "Low",
+    2: "Significant",
+    3: "Informational",
 }
 
 TIER_REVIEW_FREQUENCY = {
     1: "Annual",
     2: "18 months",
     3: "24 months",
-    4: "24 months",
 }
 
 TIER_SIGN_OFF = {
     1: "Model Risk Committee",
     2: "Chief Actuary",
     3: "Head of Pricing",
-    4: "Head of Pricing",
 }
 
 # Default thresholds for tier assignment (score >= threshold -> that tier)
@@ -459,13 +456,14 @@ class RiskTierScorer:
     def _assign_tier(self, score: float) -> int:
         """Map a composite score to a tier.
 
-        Iterates tier thresholds in descending order (highest risk first).
-        Returns 3 as the floor.
+        Iterates tier thresholds in descending order of threshold value so
+        that the highest-risk tier (largest threshold) is checked first.
+        Returns the lowest-risk tier (min key) if no threshold is met.
         """
-        for tier in sorted(self.thresholds.keys()):
+        for tier in sorted(self.thresholds.keys(), key=lambda t: self.thresholds[t], reverse=True):
             if score >= self.thresholds[tier]:
                 return tier
-        return max(self.thresholds.keys())
+        return min(self.thresholds.keys())
 
     def _build_rationale(
         self,

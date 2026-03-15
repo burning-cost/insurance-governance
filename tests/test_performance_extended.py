@@ -265,7 +265,8 @@ def test_hl_extra_has_hl_statistic():
     assert result.extra["hl_statistic"] >= 0
 
 
-def test_hl_df_is_n_groups_minus_2():
+def test_hl_df_is_n_groups_minus_1():
+    # P1-2 fix: holdout validation uses df = n_groups - 1, not n_groups - 2.
     rep = make_report()
     result = rep.hosmer_lemeshow_test(n_groups=10)
-    assert result.extra["df"] == 8
+    assert result.extra["df"] == 9

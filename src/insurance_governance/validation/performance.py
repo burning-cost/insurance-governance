@@ -572,6 +572,13 @@ class PerformanceReport:
         The A/E ratio (actual / expected) should be close to 1.0 on the
         validation dataset. Significant deviation indicates model bias.
 
+        For frequency models, y_pred should be the predicted rate (claims per
+        policy year) and exposure should be policy years. In that case the
+        expected claim count is sum(y_pred * exposure * w), so the
+        denominator uses exposure. When no exposure is provided, it falls back
+        to sum(y_pred * w), which is correct when y_pred is already a
+        predicted count.
+
         Parameters
         ----------
         n_bands:
@@ -583,9 +590,15 @@ class PerformanceReport:
         """
         w = self._weights if self._weights is not None else np.ones(len(self._y_true))
         exp = self._exposure if self._exposure is not None else np.ones(len(self._y_true))
+        has_exposure = self._exposure is not None
 
         total_actual = float(np.sum(self._y_true * w))
-        total_predicted = float(np.sum(self._y_pred * w))
+        # When exposure is provided y_pred is a rate; expected count = rate * exposure.
+        # Without exposure, treat y_pred as a count directly.
+        if has_exposure:
+            total_predicted = float(np.sum(self._y_pred * exp * w))
+        else:
+            total_predicted = float(np.sum(self._y_pred * w))
         total_exposure = float(np.sum(exp))
 
         if total_predicted == 0:
@@ -608,10 +621,11 @@ class PerformanceReport:
                 f"total exposure: {total_exposure:,.1f}."
             )
 
-        # By-band breakdown - sort by predicted
+        # By-band breakdown - sort by predicted rate/count
         order = np.argsort(self._y_pred)
         y_sorted = self._y_true[order]
         pred_sorted = self._y_pred[order]
+        exp_sorted = exp[order]
         w_sorted = w[order]
 
         cum_w = np.cumsum(w_sorted)
@@ -625,7 +639,10 @@ class PerformanceReport:
         for band_num, edge in enumerate(band_ids):
             idx = slice(prev, edge + 1)
             act = float(np.sum(y_sorted[idx] * w_sorted[idx]))
-            pred = float(np.sum(pred_sorted[idx] * w_sorted[idx]))
+            if has_exposure:
+                pred = float(np.sum(pred_sorted[idx] * exp_sorted[idx] * w_sorted[idx]))
+            else:
+                pred = float(np.sum(pred_sorted[idx] * w_sorted[idx]))
             band_data.append({
                 "band": band_num + 1,
                 "actual": act,
@@ -685,9 +702,15 @@ class PerformanceReport:
         TestResult
         """
         w = self._weights if self._weights is not None else np.ones(len(self._y_true))
+        exp = self._exposure if self._exposure is not None else np.ones(len(self._y_true))
+        has_exposure = self._exposure is not None
 
         total_actual = float(np.sum(self._y_true * w))
-        total_predicted = float(np.sum(self._y_pred * w))
+        # When exposure is provided y_pred is a rate; expected count = rate * exposure.
+        if has_exposure:
+            total_predicted = float(np.sum(self._y_pred * exp * w))
+        else:
+            total_predicted = float(np.sum(self._y_pred * w))
 
         if total_predicted == 0:
             return TestResult(
@@ -749,14 +772,19 @@ class PerformanceReport:
 
         Policies are grouped into n_groups deciles of predicted risk.
         For each group we compute observed and expected counts. The
-        H-L statistic is approximately chi-squared(n_groups - 2) under
-        the null of perfect calibration.
+        Pearson chi-squared statistic sum((O-E)^2/E) is approximately
+        chi-squared(n_groups - 1) under the null of perfect calibration
+        on holdout data (no parameters estimated from this dataset).
+
+        Note: the classical binary Hosmer-Lemeshow test uses n_groups - 2 df
+        because two parameters (intercept and slope) are estimated from the
+        same data. On a separate holdout set, the correct df is n_groups - 1.
 
         Parameters
         ----------
         n_groups:
-            Number of groups (deciles by default). H-L statistic has
-            n_groups - 2 degrees of freedom.
+            Number of groups (deciles by default). Pearson chi-squared has
+            n_groups - 1 degrees of freedom on holdout data.
         alpha:
             Significance level. p < alpha fails the test.
 
@@ -794,13 +822,13 @@ class PerformanceReport:
             })
             prev = edge + 1
 
-        df = n_groups - 2
+        df = n_groups - 1
         p_value = float(1 - stats.chi2.cdf(hl_stat, df=df)) if df > 0 else float("nan")
         passed = p_value >= alpha if not np.isnan(p_value) else False
 
         details = (
             f"Hosmer-Lemeshow calibration test ({n_groups} groups) for {self._model_name}: "
-            f"H-L statistic = {hl_stat:.4f}, df = {df}, p-value = {p_value:.4f}. "
+            f"Pearson chi-sq = {hl_stat:.4f}, df = {df}, p-value = {p_value:.4f}. "
             f"{'Model is well-calibrated (p >= ' + str(alpha) + ').' if passed else 'Calibration rejected (p < ' + str(alpha) + ') - model predictions are systematically biased in some risk groups.'}"
         )
 

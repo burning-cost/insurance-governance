@@ -145,9 +145,9 @@ class TestDriftHistoryBands:
 
 
 class TestTierAssignmentFallback:
-    def test_score_below_all_thresholds_returns_max_tier(self):
+    def test_score_below_all_thresholds_returns_min_tier(self):
         """With non-standard thresholds where no tier is reached, should return
-        the tier with the highest key (least urgent)."""
+        min(keys) as a conservative fallback (P1-3 fix: was incorrectly max(keys))."""
         # Set thresholds requiring very high score
         scorer = RiskTierScorer(thresholds={1: 200, 2: 150, 3: 100})
         # Minimum possible score (low complexity, development, no external data,
@@ -162,8 +162,8 @@ class TestTierAssignmentFallback:
             validation_months_ago=1.0,
             drift_triggers_last_year=0,
         )
-        # No threshold is met, so should return max(thresholds.keys()) = 3
-        assert result.tier == 3
+        # No threshold is met: fallback to min(keys) = 1 (conservative / safe)
+        assert result.tier == 1
 
 
 # ---------------------------------------------------------------------------
