@@ -47,8 +47,14 @@ dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "insurance-fairness>=0.1.0",
+    "pdoc>=14.0.0",
 ]
 shap = ["shap>=0.42.0"]
+
+[project.urls]
+Repository = "https://github.com/burning-cost/insurance-governance"
+Issues = "https://github.com/burning-cost/insurance-governance/issues"
+Documentation = "https://burning-cost.github.io/insurance-governance"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/insurance_governance"]
