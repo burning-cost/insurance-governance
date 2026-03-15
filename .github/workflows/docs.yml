@@ -28,11 +28,11 @@ jobs:
           pip install pdoc
           pip install -e ".[shap]"
       - name: Generate docs
-        run: pdoc --html --output-dir ./docs insurance_governance
+        run: pdoc -o ./docs insurance_governance
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs/insurance_governance
+          path: ./docs
 
   deploy:
     needs: build
