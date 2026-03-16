@@ -1,7 +1,7 @@
-"""Tests for ModelCard Pydantic schema."""
+"""Tests for ModelCard schema."""
 import pytest
 from datetime import date
-from pydantic import ValidationError
+from insurance_governance.validation.model_card import ValidationError
 from insurance_governance.validation import ModelCard
 
 
@@ -95,7 +95,7 @@ def test_optional_fields_accepted():
 
 
 def test_date_string_coercion():
-    # Pydantic v2 coerces date strings
+    # ISO date strings are coerced to date objects
     card = make_valid_card(development_date="2024-06-15")
     assert card.development_date == date(2024, 6, 15)
 

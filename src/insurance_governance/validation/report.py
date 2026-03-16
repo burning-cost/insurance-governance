@@ -23,6 +23,7 @@ Usage
 """
 from __future__ import annotations
 
+import dataclasses
 import json
 import uuid
 from datetime import date, datetime
@@ -137,7 +138,7 @@ class ReportGenerator:
         """
         return {
             "run_id": self._run_id,
-            "model_card": self._card.model_dump(mode="json"),
+            "model_card": dataclasses.asdict(self._card),
             "generated_date": str(self._generated_date),
             "rag_status": self._rag_status.value,
             "results": [r.to_dict() for r in self._results],
