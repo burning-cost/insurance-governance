@@ -1,6 +1,6 @@
 """insurance-governance: unified model governance for UK insurance pricing.
 
-Merges PRA SS1/23 model validation (insurance-validation) and model risk
+Merges model validation (insurance-validation) and model risk
 management (insurance-mrm) into a single package.
 
 Two subpackages, one install:

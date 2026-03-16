@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "insurance-governance"
 version = "0.1.2"
-description = "Unified model governance for UK insurance pricing: PRA SS1/23 validation and model risk management"
+description = "Unified model governance for UK insurance pricing: SS1/23-aligned validation and model risk management"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [

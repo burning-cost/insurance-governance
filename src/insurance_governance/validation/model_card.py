@@ -3,7 +3,7 @@ Pydantic model card schema for UK insurance pricing models.
 
 The model card is the anchor document for the validation report. It
 captures what the model is, who built it, what it is allowed to do, and
-what its known limitations are. This maps directly to SS1/23 Principle 3
+what its known limitations are. This aligns with SS1/23 Principle 3 (as applied by analogy to insurance MRM)
 (Model development, implementation and use) and the FCA's requirement for
 Consumer Duty fair value documentation.
 

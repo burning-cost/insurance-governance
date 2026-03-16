@@ -1,5 +1,5 @@
 """
-ModelValidationReport: high-level facade for PRA SS1/23 compliant validation.
+ModelValidationReport: high-level facade for model validation aligned with the principles of PRA SS1/23 (as adapted for insurance).
 
 This is the primary entry point for most users. It accepts your model,
 training data, and validation data, runs all standard checks, and produces
@@ -76,7 +76,7 @@ except ImportError:
 
 class ModelValidationReport:
     """
-    PRA SS1/23 compliant model validation report generator.
+    Model validation report generator, structured around the principles of PRA SS1/23 (as adapted for insurance).
 
     Runs all standard validation checks and produces an HTML report plus
     a JSON sidecar. The HTML is completely self-contained (no CDN, no JS).
@@ -324,7 +324,7 @@ class ModelValidationReport:
         else:
             details = (
                 "Monitoring plan incomplete: no named owner. "
-                "PRA SS1/23 Principle 5 requires a named individual responsible for "
+                "Good MRM practice (aligned with SS1/23 Principle 5) requires a named individual responsible for "
                 "ongoing monitoring. Assign an owner before production sign-off."
             )
 

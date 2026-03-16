@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # Benchmark: insurance-governance automated validation vs manual checklist
 # MAGIC
-# MAGIC **Library:** `insurance-governance` — PRA SS1/23 compliant automated model
+# MAGIC **Library:** `insurance-governance` — SS1/23-aligned (insurance adaptation) automated model
 # MAGIC validation with full statistical test suite: Gini, PSI, Hosmer-Lemeshow,
 # MAGIC lift charts, A/E ratios with Poisson CIs, and drift monitoring.
 # MAGIC
