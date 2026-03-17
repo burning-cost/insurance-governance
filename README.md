@@ -127,20 +127,30 @@ A ready-to-run Databricks notebook benchmarking this library against standard ap
 
 ## Performance
 
-Benchmarked on synthetic UK motor data — 50,000 policies, CatBoost Poisson frequency model, 60/20/20 temporal split. See `notebooks/benchmark.py` for the full demo workflow.
+Benchmarked on Databricks (2026-03-16) using synthetic UK motor data: 20,000 training + 8,000 validation policies, three model scenarios — well-specified (Model A), miscalibrated (Model B, A/E=1.18 with age-band bias), and drifted (Model C, trained on a shifted population). The comparison is the library's automated 5-test suite against a manual 4-check checklist. See `benchmarks/benchmark_insurance_governance.py` for the full script.
 
-| Task | Time |
-|------|------|
-| Full validation suite (9 tests) | < 5 seconds |
-| HTML validation report generation | < 1 second |
-| JSON sidecar generation | < 1 second |
-| RiskTierScorer.score() | < 1ms |
-| ModelInventory.register() | < 10ms |
-| GovernanceReport HTML generation | < 1 second |
+**Runtime.** On an 8,000-row validation set:
 
-The computational cost of this library is negligible — it runs statistical tests on pre-computed predictions, not raw data. The bottleneck is always the model fitting that produces `y_pred_val`, not the governance layer. A team generating quarterly validation reports for 15 models can run the full suite in under 10 minutes of wall clock time, most of which is the CatBoost fits.
+| Approach | Time |
+|----------|------|
+| Manual 4-check checklist | 0.09s |
+| Automated 5-test suite (Gini + bootstrap CI, A/E + Poisson CI, Hosmer-Lemeshow, lift chart, PSI) | 1.17s |
 
-The value is not in computation speed but in consistency: every model in the portfolio gets identical tests, identical thresholds, and identical output format. A pricing team relying on bespoke analyst notebooks has no guarantee that the Gini in one report means the same thing as the Gini in another.
+The automated suite is ~13× slower in wall clock time; that 1-second overhead is entirely the 500-resample bootstrap for the Gini confidence interval.
+
+**What the automated suite catches that the manual checklist misses.**
+
+The key test is Model B (miscalibrated). Both methods flag the A/E deviation. But only the automated suite runs Hosmer-Lemeshow, which detects the age-band-level miscalibration that averages out in the global A/E: HL p < 0.0001 (reject calibration by group). The manual checklist, which computes one aggregate A/E number, cannot surface this pattern without additional code.
+
+For Model C (drifted population), PSI on the score distribution = 0.189, flagging distributional shift. The manual checklist includes PSI too, so both methods agree here — but only the automated suite attaches a Poisson confidence interval to the A/E ratio, which is what lets you distinguish genuine drift from sampling noise.
+
+| Scenario | Manual verdict | Automated verdict | Key diagnostic |
+|----------|---------------|-------------------|----------------|
+| Model A (well-specified) | 4/4 pass | 5/5 pass | Gini CI, A/E CI both tight |
+| Model B (miscalibrated) | Flags A/E | Flags A/E + HL | HL p<0.0001 — age-band bias |
+| Model C (drifted) | Flags PSI | Flags PSI + A/E CI | PSI=0.189, CI excludes 1.0 |
+
+The runtime difference does not matter in practice — governance validation runs once per model release, not in a hot loop. The return is consistent, audit-ready output for all three scenarios: every test produces a `TestResult` with `passed`, `severity`, and a detail string ready for a validation pack.
 
 
 ## Related Libraries
