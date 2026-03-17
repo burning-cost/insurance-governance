@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/badge/license-BSD--3-blue)]()
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 
+> 💬 Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A ⭐ helps others find it.
+
 Unified model governance for UK insurance pricing teams. Combines model validation and model risk management into one package, with tests and outputs structured to align with the principles of PRA SS1/23 (as adapted for insurance).
 
 Merged from: `insurance-validation` (model validation reports) and `insurance-mrm` (model risk management).
