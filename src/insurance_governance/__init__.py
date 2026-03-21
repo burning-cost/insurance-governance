@@ -52,7 +52,7 @@ from .mrm import (
 )
 from .mrm import ModelCard as MRMModelCard
 
-__version__ = "0.1.0"
+__version__ = "0.1.3"
 
 __all__ = [
     # Validation
