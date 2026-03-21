@@ -111,7 +111,7 @@ At the top level they are re-exported as `ValidationModelCard` and `MRMModelCard
 
 ## Capabilities Demo
 
-Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson frequency model, 60/20/20 temporal train/validation/test split. Full notebook: `notebooks/benchmark.py`.
+Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson frequency model, 60/20/20 temporal train/validation/test split. Full script: `benchmarks/benchmark_insurance_governance.py`.
 
 - Runs a full validation suite in a single `ModelValidationReport` call: Gini coefficient with bootstrap 95% CI, 10-band lift chart, A/E by predicted decile with Poisson CI, Hosmer-Lemeshow goodness-of-fit, PSI on score distribution (train vs validation), monitoring plan completeness check — all returning `TestResult` objects with a pass/fail flag and human-readable detail
 - Computes an overall RAG status (Green/Amber/Red) from the worst-severity failure across all tests
@@ -146,13 +146,13 @@ The automated suite is ~13× slower in wall clock time; that 1-second overhead i
 
 The key test is Model B (miscalibrated). Both methods flag the A/E deviation. But only the automated suite runs Hosmer-Lemeshow, which detects the age-band-level miscalibration that averages out in the global A/E: HL p < 0.0001 (reject calibration by group). The manual checklist, which computes one aggregate A/E number, cannot surface this pattern without additional code.
 
-For Model C (drifted population), PSI on the score distribution = 0.189, flagging distributional shift. The manual checklist includes PSI too, so both methods agree here — but only the automated suite attaches a Poisson confidence interval to the A/E ratio, which is what lets you distinguish genuine drift from sampling noise.
+For Model C (drifted population), PSI on the score distribution = 0.189 — below the 0.25 threshold, so the manual checklist passes on PSI. Only the automated suite catches the drift, because it attaches a Poisson confidence interval to the A/E ratio: the CI excludes 1.0, flagging genuine miscalibration that the manual aggregate A/E misses. PSI alone is not sufficient to detect this type of drift; the confidence-interval-based A/E test is what surfaces it.
 
 | Scenario | Manual verdict | Automated verdict | Key diagnostic |
 |----------|---------------|-------------------|----------------|
 | Model A (well-specified) | 4/4 pass | 5/5 pass | Gini CI, A/E CI both tight |
 | Model B (miscalibrated) | Flags A/E | Flags A/E + HL | HL p<0.0001 — age-band bias |
-| Model C (drifted) | Flags PSI | Flags PSI + A/E CI | PSI=0.189, CI excludes 1.0 |
+| Model C (drifted) | Passes PSI | Flags A/E CI | PSI=0.189 (below 0.25 threshold — manual checklist passes); A/E CI excludes 1.0 |
 
 The runtime difference does not matter in practice — governance validation runs once per model release, not in a hot loop. The return is consistent, audit-ready output for all three scenarios: every test produces a `TestResult` with `passed`, `severity`, and a detail string ready for a validation pack.
 
