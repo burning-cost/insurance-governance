@@ -31,7 +31,7 @@ Model risk management framework. ModelCard metadata container, RiskTierScorer (o
 ## Install
 
 ```bash
-pip install insurance-governance
+uv add insurance-governance
 ```
 
 ## Quick start
