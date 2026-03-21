@@ -159,11 +159,11 @@ The runtime difference does not matter in practice — governance validation run
 
 ## Related Libraries
 
-| Library | What it does |
+| Library | Description |
 |---------|-------------|
+| [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | Model drift detection — ongoing monitoring evidence feeds into governance review cycles |
 | [insurance-fairness](https://github.com/burning-cost/insurance-fairness) | Proxy discrimination auditing — fairness audit outputs are a required input to the governance sign-off pack |
 | [insurance-deploy](https://github.com/burning-cost/insurance-deploy) | Champion/challenger deployment with ENBP audit logging — governance documents the model; deploy manages its lifecycle |
-| [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | Model monitoring — ongoing monitoring evidence feeds into governance review cycles |
 
 ## Licence
 
