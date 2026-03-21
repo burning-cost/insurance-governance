@@ -12,6 +12,8 @@ Unified model governance for UK insurance pricing teams. Combines model validati
 
 Merged from: `insurance-validation` (model validation reports) and `insurance-mrm` (model risk management).
 
+**Blog post:** [One Package, One Install: PRA SS1/23 Validation and MRM Governance Unified](https://burning-cost.github.io/2026/03/14/insurance-governance-unified-pra-ss123-validation/)
+
 The problem this solves: validation tests and MRM governance packs were built separately and had separate installs, separate version pinning, and separate import paths. Pricing teams either installed both and managed the coupling themselves, or skipped one. This package resolves that by providing a single install.
 
 **Regulatory note:** PRA SS1/23 is a supervisory statement directed at banks and building societies, not insurers. Insurance model risk management is governed directly by PS12/22, Solvency II internal model requirements, and EIOPA validation guidelines. In practice, many UK insurance MRM frameworks reference SS1/23 by analogy — it articulates sound MRM principles regardless of firm type — and the PRA has encouraged insurers to take note. This library uses SS1/23 as a reference framework in that spirit: the validation tests and governance structure reflect its principles, but you should map your own obligations to your actual regulatory basis (PS12/22 or equivalent).
@@ -31,6 +33,8 @@ Model risk management framework. ModelCard metadata container, RiskTierScorer (o
 ```bash
 pip install insurance-governance
 ```
+
+> 💬 Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A ⭐ helps others find it.
 
 ## Quick start
 
