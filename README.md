@@ -34,8 +34,6 @@ Model risk management framework. ModelCard metadata container, RiskTierScorer (o
 pip install insurance-governance
 ```
 
-> 💬 Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A ⭐ helps others find it.
-
 ## Quick start
 
 ```python
