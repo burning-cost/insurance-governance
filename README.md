@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Python](https://img.shields.io/pypi/pyversions/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]()
-[![License](https://img.shields.io/badge/license-BSD--3-blue)]()
+[![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 
 > 💬 Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A ⭐ helps others find it.
