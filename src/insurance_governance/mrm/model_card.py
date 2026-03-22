@@ -251,6 +251,12 @@ class ModelCard:
             raise ValueError(
                 "overall_rag must be 'GREEN', 'AMBER', or 'RED'"
             )
+        if self.distribution_family and self.distribution_family not in DISTRIBUTION_FAMILIES:
+            raise ValueError(
+                f"distribution_family must be one of {sorted(DISTRIBUTION_FAMILIES)}, "
+                f"got {self.distribution_family!r}. "
+                "Use 'other' if your distribution is not in the standard list."
+            )
         # Coerce plain-string limitations to Limitation objects
         normalised = []
         for lim in self.limitations:
