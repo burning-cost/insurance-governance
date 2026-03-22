@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 
-> 💬 Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A ⭐ helps others find it.
+> Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A star helps others find it.
 
 Unified model governance for UK insurance pricing teams. Combines model validation and model risk management into one package, with tests and outputs structured to align with the principles of PRA SS1/23 (as adapted for insurance).
 
@@ -32,6 +32,8 @@ Model risk management framework. ModelCard metadata container, RiskTierScorer (o
 
 ```bash
 uv add insurance-governance
+# or
+pip install insurance-governance
 ```
 
 ## Quick start
