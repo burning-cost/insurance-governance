@@ -18,6 +18,8 @@ import numpy as np
 import polars as pl
 import pytest
 
+pytest.importorskip("insurance_fairness")
+
 from insurance_fairness.bias_metrics import (
     CalibrationResult,
     DemographicParityResult,
