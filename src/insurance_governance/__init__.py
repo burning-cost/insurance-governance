@@ -52,7 +52,12 @@ from .mrm import (
 )
 from .mrm import ModelCard as MRMModelCard
 
-__version__ = "0.1.3"
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("insurance-governance")
+except PackageNotFoundError:
+    __version__ = "0.0.0"  # not installed
 
 __all__ = [
     # Validation
