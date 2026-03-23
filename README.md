@@ -18,6 +18,14 @@ The problem this solves: validation tests and MRM governance packs were built se
 
 **Regulatory note:** PRA SS1/23 is a supervisory statement directed at banks and building societies, not insurers. Insurance model risk management is governed directly by PS12/22, Solvency II internal model requirements, and EIOPA validation guidelines. In practice, many UK insurance MRM frameworks reference SS1/23 by analogy — it articulates sound MRM principles regardless of firm type — and the PRA has encouraged insurers to take note. This library uses SS1/23 as a reference framework in that spirit: the validation tests and governance structure reflect its principles, but you should map your own obligations to your actual regulatory basis (PS12/22 or equivalent).
 
+## Why use this?
+
+- UK pricing teams managing 10+ production models have no consistent way to produce validation and governance artefacts — every model gets a bespoke analyst notebook, and the outputs are incomparable. One install, one framework.
+- Runs a five-test statistical validation suite (Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI) and catches segment-level miscalibration that a single aggregate A/E number misses — as demonstrated on synthetic motor data where Model B passes a manual A/E check but fails HL at p < 0.0001.
+- Scores model risk tier objectively across six dimensions (GWP, complexity, deployment status, regulatory use, external data, customer-facing) mapped to a 0–100 composite — removes subjective judgement from MRC presentations.
+- Generates self-contained HTML validation reports and executive governance packs (model purpose, risk tier rationale, assumptions register, approval conditions) in under one second — print-to-PDF ready.
+- Structured around PRA SS1/23 principles, as applied to insurance under PS12/22 and EIOPA guidelines: the audit trail is suitable for a PRA supervisory visit or internal model risk committee.
+
 ## Subpackages
 
 ### `insurance_governance.validation`
