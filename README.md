@@ -111,6 +111,10 @@ from insurance_governance.validation import ModelValidationReport, ModelCard as 
 from insurance_governance.mrm import ModelCard as MRMModelCard, RiskTierScorer, ModelInventory, GovernanceReport
 ```
 
+---
+
+If this is useful, a ⭐ on GitHub helps others find it.
+
 ## Note on ModelCard
 
 Both subpackages define a `ModelCard` class, but they serve different purposes:
