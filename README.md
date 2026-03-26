@@ -5,6 +5,7 @@
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
+[![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](https://nbviewer.org/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 
 > Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A star helps others find it.
 
