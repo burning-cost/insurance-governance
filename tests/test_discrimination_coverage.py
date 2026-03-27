@@ -73,7 +73,7 @@ class TestRank:
         arr = np.array([5.0, 5.0, 5.0, 5.0])
         r = _rank(arr)
         # All tie: ranks 1,2,3,4 → average 2.5
-        assert (r == pytest.approx(2.5)).all()
+        np.testing.assert_allclose(r, 2.5)
 
     def test_single_element(self):
         arr = np.array([42.0])
