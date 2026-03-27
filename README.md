@@ -49,7 +49,7 @@ pip install insurance-governance
 uv add insurance-governance
 ```
 
-**Dependencies:** numpy, jinja2 (for HTML reports). Polars is optional — data quality and feature drift checks activate when it is present.
+**Dependencies:** numpy, scipy, jinja2, polars, scikit-learn — all installed automatically. There are no optional runtime dependencies; the package requires polars at all times.
 
 ---
 
@@ -79,7 +79,7 @@ report = ModelValidationReport(
     model_card=val_card, y_val=y_val, y_pred_val=y_pred_val, exposure_val=exposure,
     monitoring_owner="Head of Pricing", monitoring_triggers={"ae_ratio": 1.10, "psi": 0.25},
 )
-print(report.get_rag_status())   # GREEN / AMBER / RED
+print(report.get_rag_status())   # "green", "amber", or "red"  (RAGStatus enum, str subclass)
 report.generate("validation_report.html")
 
 mrm_card = MRMModelCard(

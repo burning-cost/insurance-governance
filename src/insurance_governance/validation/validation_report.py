@@ -12,7 +12,7 @@ tests.
 Usage
 -----
     import numpy as np
-    from insurance_validation import ModelValidationReport, ModelCard
+    from insurance_governance.validation import ModelValidationReport, ModelCard
 
     card = ModelCard(
         name="Motor Frequency v3.2",
@@ -355,7 +355,7 @@ class ModelValidationReport:
                     passed=True,
                     details=(
                         "SHAP feature importance not available. "
-                        "Install with: pip install insurance-validation[shap]"
+                        "Install with: pip install insurance-governance[shap]"
                     ),
                     severity=Severity.INFO,
                 )
