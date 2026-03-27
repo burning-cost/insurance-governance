@@ -54,10 +54,11 @@ dev = [
 shap = ["shap>=0.42.0"]
 
 [project.urls]
-Homepage = "https://github.com/burning-cost/insurance-governance"
+Homepage = "https://burning-cost.github.io/insurance-governance"
 Repository = "https://github.com/burning-cost/insurance-governance"
-Issues = "https://github.com/burning-cost/insurance-governance/issues"
+Changelog = "https://github.com/burning-cost/insurance-governance/releases"
 Documentation = "https://burning-cost.github.io/insurance-governance"
+Issues = "https://github.com/burning-cost/insurance-governance/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/insurance_governance"]
