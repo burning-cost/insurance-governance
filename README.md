@@ -1,6 +1,7 @@
 # insurance-governance
 
 [![PyPI](https://img.shields.io/pypi/v/insurance-governance)](https://pypi.org/project/insurance-governance/)
+[![Downloads](https://img.shields.io/pypi/dm/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Python](https://img.shields.io/pypi/pyversions/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Tests](https://github.com/burning-cost/insurance-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/burning-cost/insurance-governance/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/burning-cost/insurance-governance/blob/main/LICENSE)
@@ -13,7 +14,6 @@ Every UK pricing team managing 10+ production models has the same problem: model
 
 This library automates both sides: it runs a five-test statistical validation suite (Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI) and produces MRM governance packs (risk tier scoring, assumptions register, approval conditions) as self-contained HTML files. The output is the same structure for every model, every release.
 
-Merged from: `insurance-validation` (model validation reports) and `insurance-mrm` (model risk management).
 
 **Blog post:** [One Package, One Install: PRA SS1/23 Validation and MRM Governance Unified](https://burning-cost.github.io/2026/03/14/insurance-governance-unified-pra-ss123-validation/)
 
@@ -38,6 +38,18 @@ Takes statistical test outputs from validation runs and fairness audit results f
 | Governance pack | Word document, rebuilt for each committee cycle | `GovernanceReport.save_html()` — self-contained HTML with model purpose, tier rationale, assumptions register, outstanding issues, approval conditions; print-to-PDF in under 1 second |
 | Model inventory | Spreadsheet or SharePoint list | `ModelInventory` — JSON file, check into git; records validation history by `run_id`, lists models with overdue reviews |
 | Consistency across 10+ models | Each model owner formats differently | Same import, same structure, same output format for every model |
+
+---
+
+## Installation
+
+```bash
+pip install insurance-governance
+# or
+uv add insurance-governance
+```
+
+**Dependencies:** numpy, jinja2 (for HTML reports). Polars is optional — data quality and feature drift checks activate when it is present.
 
 ---
 
@@ -116,17 +128,6 @@ See `examples/quickstart.py` for a fully self-contained example with synthetic d
 
 ---
 
-## Installation
-
-```bash
-pip install insurance-governance
-# or
-uv add insurance-governance
-```
-
-**Dependencies:** numpy, jinja2 (for HTML reports). Polars is optional — data quality and feature drift checks activate when it is present.
-
----
 
 ## Subpackage imports
 
