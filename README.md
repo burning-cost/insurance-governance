@@ -9,174 +9,198 @@
 
 > Questions or feedback? Start a [Discussion](https://github.com/burning-cost/insurance-governance/discussions). Found it useful? A star helps others find it.
 
-Unified model governance for UK insurance pricing teams. Combines model validation and model risk management into one package, with tests and outputs structured to align with the principles of PRA SS1/23 (as adapted for insurance).
+Every UK pricing team managing 10+ production models has the same problem: model validation reports are bespoke analyst notebooks, MRM governance packs are Word documents produced by hand for each Model Risk Committee, and there is no consistent way to demonstrate to a PRA supervisor that you have a functioning model risk framework. Under PS12/22 and EIOPA Solvency II validation guidelines, insurers are required to document model performance, assumptions, and risk tier — but nothing enforces that this documentation is comparable across models, or that the statistical tests actually match what SS1/23 Principle 3 describes.
+
+This library automates both sides: it runs a five-test statistical validation suite (Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI) and produces MRM governance packs (risk tier scoring, assumptions register, approval conditions) as self-contained HTML files. The output is the same structure for every model, every release.
 
 Merged from: `insurance-validation` (model validation reports) and `insurance-mrm` (model risk management).
 
 **Blog post:** [One Package, One Install: PRA SS1/23 Validation and MRM Governance Unified](https://burning-cost.github.io/2026/03/14/insurance-governance-unified-pra-ss123-validation/)
 
-The problem this solves: validation tests and MRM governance packs were built separately and had separate installs, separate version pinning, and separate import paths. Pricing teams either installed both and managed the coupling themselves, or skipped one. This package resolves that by providing a single install.
+**Regulatory note:** PRA SS1/23 is directed at banks and building societies. Insurance model risk management is governed by PS12/22, Solvency II internal model requirements, and EIOPA validation guidelines. In practice many UK insurance MRM frameworks reference SS1/23 by analogy — it articulates sound MRM principles regardless of firm type — and the PRA has encouraged insurers to take note. This library uses SS1/23 as a reference framework in that spirit. Map your own obligations to your actual regulatory basis.
 
-**Regulatory note:** PRA SS1/23 is a supervisory statement directed at banks and building societies, not insurers. Insurance model risk management is governed directly by PS12/22, Solvency II internal model requirements, and EIOPA validation guidelines. In practice, many UK insurance MRM frameworks reference SS1/23 by analogy — it articulates sound MRM principles regardless of firm type — and the PRA has encouraged insurers to take note. This library uses SS1/23 as a reference framework in that spirit: the validation tests and governance structure reflect its principles, but you should map your own obligations to your actual regulatory basis (PS12/22 or equivalent).
+---
 
-## Why use this?
+## Part of the Burning Cost stack
 
-- UK pricing teams managing 10+ production models have no consistent way to produce validation and governance artefacts — every model gets a bespoke analyst notebook, and the outputs are incomparable. One install, one framework.
-- Runs a five-test statistical validation suite (Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI) and catches segment-level miscalibration that a single aggregate A/E number misses — as demonstrated on synthetic motor data where Model B passes a manual A/E check but fails HL at p < 0.0001.
-- Scores model risk tier objectively across six dimensions (GWP, complexity, deployment status, regulatory use, external data, customer-facing) mapped to a 0–100 composite — removes subjective judgement from MRC presentations.
-- Generates self-contained HTML validation reports and executive governance packs (model purpose, risk tier rationale, assumptions register, approval conditions) in under one second — print-to-PDF ready.
-- Structured around PRA SS1/23 principles, as applied to insurance under PS12/22 and EIOPA guidelines: the audit trail is suitable for a PRA supervisory visit or internal model risk committee.
+Takes statistical test outputs from validation runs and fairness audit results from [insurance-fairness](https://github.com/burning-cost/insurance-fairness). Feeds governance packs and model inventory records into pricing committee sign-off workflows. Receives monitoring evidence from [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) to surface overdue reviews. → [See the full stack](https://burning-cost.github.io/stack/)
 
-## Subpackages
+---
 
-### `insurance_governance.validation`
+## Manual governance vs this library
 
-Model validation report generator, aligned with the principles of PRA SS1/23 (as adapted for insurance). Runs statistical tests (Gini, PSI, discrimination checks, Hosmer-Lemeshow, lift charts) and produces self-contained HTML reports.
+| Task | Manual approach | insurance-governance |
+|------|----------------|----------------------|
+| Statistical validation | Bespoke notebook per model — different tests, different output formats, incomparable across models | `ModelValidationReport` — five fixed tests, same HTML structure, every model |
+| A/E miscalibration detection | One aggregate A/E ratio — misses segment-level bias | A/E with Poisson CI + Hosmer-Lemeshow; detects age-band bias that averages out in the global A/E (HL p < 0.0001 on Model B in benchmark) |
+| Score distribution drift | Paste PSI value into Word | PSI test result in JSON sidecar, with pass/fail flag and threshold detail |
+| Risk tier assignment | Subjective judgement in MRC pre-read | `RiskTierScorer` — 6 dimensions, 0–100 composite, documented rationale string per dimension; no judgement call at the committee |
+| Governance pack | Word document, rebuilt for each committee cycle | `GovernanceReport.save_html()` — self-contained HTML with model purpose, tier rationale, assumptions register, outstanding issues, approval conditions; print-to-PDF in under 1 second |
+| Model inventory | Spreadsheet or SharePoint list | `ModelInventory` — JSON file, check into git; records validation history by `run_id`, lists models with overdue reviews |
+| Consistency across 10+ models | Each model owner formats differently | Same import, same structure, same output format for every model |
 
-### `insurance_governance.mrm`
-
-Model risk management framework. ModelCard metadata container, RiskTierScorer (objective 0-100 composite score mapping to Tier 1/2/3), ModelInventory (JSON file registry), GovernanceReport (executive committee pack).
-
-## Install
-
-```bash
-uv add insurance-governance
-# or
-pip install insurance-governance
-```
+---
 
 ## Quick start
 
 ```python
 import numpy as np
 from insurance_governance import (
-    ModelValidationReport,
-    ValidationModelCard,
-    MRMModelCard,
-    RiskTierScorer,
-    ModelInventory,
-    GovernanceReport,
+    ModelValidationReport, ValidationModelCard,
+    MRMModelCard, RiskTierScorer, GovernanceReport, Assumption,
 )
 
-# --- Synthetic model outputs (replace with your real model predictions) ---
 rng = np.random.default_rng(42)
-n_val = 5_000
-y_val        = rng.poisson(0.08, n_val).astype(float)          # observed claim counts
-y_pred_val   = np.clip(rng.normal(0.08, 0.02, n_val), 0.001, None)  # model predictions
-exposure_val = rng.uniform(0.5, 1.0, n_val)                    # policy years (required for A/E)
+n = 5_000
+y_val      = rng.poisson(0.08, n).astype(float)
+y_pred_val = np.clip(rng.normal(0.08, 0.02, n), 0.001, None)
+exposure   = rng.uniform(0.5, 1.0, n)
 
-# --- Run statistical validation ---
-card = ValidationModelCard(
-    name="Motor Frequency v3.2",
-    version="3.2.0",
-    purpose="Predict claim frequency for UK motor portfolio",
+val_card = ValidationModelCard(
+    name="Motor Frequency v3.2", version="3.2.0",
+    purpose="Predict claim frequency for UK private motor portfolio",
     methodology="CatBoost gradient boosting with Poisson objective",
-    target="claim_count",
-    features=["age", "vehicle_age", "area", "vehicle_group"],
-    limitations=["No telematics data"],
-    owner="Pricing Team",
+    target="claim_count", features=["age", "vehicle_age", "area", "vehicle_group"],
+    limitations=["No telematics data"], owner="Pricing Team",
 )
 report = ModelValidationReport(
-    model_card=card,
-    y_val=y_val,
-    y_pred_val=y_pred_val,
-    exposure_val=exposure_val,
+    model_card=val_card, y_val=y_val, y_pred_val=y_pred_val, exposure_val=exposure,
+    monitoring_owner="Head of Pricing", monitoring_triggers={"ae_ratio": 1.10, "psi": 0.25},
 )
+print(report.get_rag_status())   # GREEN / AMBER / RED
 report.generate("validation_report.html")
 
-# --- MRM governance pack ---
 mrm_card = MRMModelCard(
-    model_id="motor-freq-v3",
-    model_name="Motor TPPD Frequency",
-    version="3.2.0",
-    model_class="pricing",
-    intended_use="Frequency pricing for private motor.",
+    model_id="motor-freq-v3", model_name="Motor TPPD Frequency",
+    version="3.2.0", model_class="pricing",
+    intended_use="Frequency pricing for UK private motor. Not for commercial fleet.",
+    assumptions=[Assumption("Claim frequency stationarity since 2022", risk="MEDIUM",
+                            mitigation="Quarterly A/E monitoring")],
 )
-scorer = RiskTierScorer()
-tier = scorer.score(
-    gwp_impacted=125_000_000,
-    model_complexity="high",
-    deployment_status="champion",
-    regulatory_use=False,
-    external_data=False,
-    customer_facing=True,
+tier = RiskTierScorer().score(
+    gwp_impacted=125_000_000, model_complexity="high",
+    deployment_status="champion", regulatory_use=False,
+    external_data=False, customer_facing=True,
 )
 GovernanceReport(card=mrm_card, tier=tier).save_html("mrm_pack.html")
 ```
 
-Or import from subpackages directly:
+See `examples/quickstart.py` for a fully self-contained example with synthetic data, training/validation split, and JSON sidecar output.
+
+---
+
+## Features
+
+**Validation (`insurance_governance.validation`)**
+
+- `ModelValidationReport` — single-call facade: pass your model card, validation arrays, and optional training arrays; get back a `RAGStatus` and an HTML report
+- Gini coefficient with 500-resample bootstrap 95% CI
+- Actual vs expected by predicted decile with Poisson confidence intervals — catches segment-level miscalibration that a single aggregate A/E misses
+- Hosmer-Lemeshow goodness-of-fit test — flags calibration failure by group
+- 10-band lift chart with per-band A/E ratios
+- PSI on score distribution (train vs validation) — flags population drift
+- Monitoring plan completeness check (SS1/23 Principle 5) — requires named owner and trigger thresholds
+- Double-lift chart against incumbent model when `incumbent_pred_val` is provided
+- Optional data quality checks (missing values, outliers, cardinality) when Polars feature DataFrames are supplied
+- Optional fairness/disparate impact section when `fairness_group_col` is supplied
+- Self-contained HTML output (no CDN, no JS) and JSON sidecar for downstream MRM system ingestion
+- All tests return `TestResult(passed, severity, detail)` — extend with your own results via `extra_results`
+
+**MRM (`insurance_governance.mrm`)**
+
+- `RiskTierScorer` — stateless, deterministic; 6 dimensions (materiality/GWP, complexity, external data, validation recency, drift history, regulatory exposure); 0–100 composite; verbose rationale string per dimension; configurable weights and thresholds
+- Tier 1 (Critical, 60+): annual review, MRC sign-off; Tier 2 (Significant, 30–59): 18-month, Chief Actuary; Tier 3 (Informational, <30): 24-month, Head of Pricing
+- `MRMModelCard` — structured governance record: model identity, intended use, assumptions with risk ratings (LOW/MEDIUM/HIGH) and mitigations, limitations, approval history, monitoring plan, last validation run ID and RAG, next review date
+- `ModelInventory` — JSON file registry; `register()`, `list_overdue()`, `get_history()` by model ID; designed to be checked into git alongside model code
+- `GovernanceReport` — executive committee HTML pack covering model purpose, risk tier rationale, last validation RAG, assumptions register, outstanding issues, approval conditions, and next review date; JSON output for Confluence/MRC portal ingestion
+
+---
+
+## Installation
+
+```bash
+pip install insurance-governance
+# or
+uv add insurance-governance
+```
+
+**Dependencies:** numpy, jinja2 (for HTML reports). Polars is optional — data quality and feature drift checks activate when it is present.
+
+---
+
+## Subpackage imports
 
 ```python
+# Top-level (recommended for most users)
+from insurance_governance import (
+    ModelValidationReport, ValidationModelCard,
+    MRMModelCard, RiskTierScorer, ModelInventory, GovernanceReport, Assumption,
+)
+
+# Subpackage imports (for custom workflows)
 from insurance_governance.validation import ModelValidationReport, ModelCard as ValidationModelCard
 from insurance_governance.mrm import ModelCard as MRMModelCard, RiskTierScorer, ModelInventory, GovernanceReport
 ```
+
+Both subpackages define a `ModelCard` class serving different purposes. At the top level they are re-exported as `ValidationModelCard` and `MRMModelCard` to avoid ambiguity.
 
 ---
 
 ## Note on ModelCard
 
-Both subpackages define a `ModelCard` class, but they serve different purposes:
+- `ValidationModelCard` (`insurance_governance.validation.ModelCard`) — Pydantic schema anchoring the statistical validation report; captures features, methodology, limitations, monitoring plan.
+- `MRMModelCard` (`insurance_governance.mrm.ModelCard`) — dataclass anchoring the MRM governance pack; captures assumptions with risk ratings, approval history, monitoring triggers, last validation run linkage.
 
-- `insurance_governance.validation.ModelCard` (`ValidationModelCard` at top level) — Pydantic schema, anchors the statistical validation report, captures features, methodology, limitations.
-- `insurance_governance.mrm.ModelCard` (`MRMModelCard` at top level) — dataclass, anchors the MRM governance pack, captures assumptions, risk tier, Model Risk Committee metadata.
-
-At the top level they are re-exported as `ValidationModelCard` and `MRMModelCard` to avoid ambiguity.
-
-## Capabilities Demo
-
-Demonstrated on synthetic motor data: 50,000 UK motor policies, CatBoost Poisson frequency model, 60/20/20 temporal train/validation/test split. Full script: `benchmarks/benchmark_insurance_governance.py`.
-
-- Runs a full validation suite in a single `ModelValidationReport` call: Gini coefficient with bootstrap 95% CI, 10-band lift chart, A/E by predicted decile with Poisson CI, Hosmer-Lemeshow goodness-of-fit, PSI on score distribution (train vs validation), monitoring plan completeness check — all returning `TestResult` objects with a pass/fail flag and human-readable detail
-- Computes an overall RAG status (Green/Amber/Red) from the worst-severity failure across all tests
-- Produces a self-contained HTML validation report and JSON sidecar, print-to-PDF ready, in under one second
-- Scores model risk tier via `RiskTierScorer`: 6 dimensions (GWP, model complexity, deployment status, regulatory use, external data, customer-facing) mapped to a 0-100 composite with documented rules per point — no subjective judgement required at the MRC presentation
-- Registers models in `ModelInventory` (JSON file, check into git alongside your code); records validation run history linked by `run_id`; lists overdue reviews
-- Generates a `GovernanceReport` executive committee pack (HTML + JSON) covering model purpose, risk tier rationale, last validation RAG, assumptions register with risk ratings, outstanding issues, approval conditions, and next review date
-
-**When to use:** You have 10+ production pricing models and want consistent, auditable validation and governance output rather than bespoke analyst notebooks that vary by model. The framework is structured around the principles of PRA SS1/23 — insurers should map those principles to their own regulatory basis (PS12/22, EIOPA guidelines). Particularly useful before a PRA supervisory visit.
-
-**When NOT to use:** You need reserving or capital model governance — this package is scoped to pricing models. It also does not replace independent human review of validation results; it automates the tests, not the judgement.
-
-
-## Databricks Notebook
-
-A ready-to-run Databricks notebook benchmarking this library against standard approaches is available in [burning-cost-examples](https://github.com/burning-cost/burning-cost-examples/blob/main/notebooks/insurance_governance_demo.py).
+---
 
 ## Performance
 
-Benchmarked on Databricks (2026-03-16) using synthetic UK motor data: 20,000 training + 8,000 validation policies, three model scenarios — well-specified (Model A), miscalibrated (Model B, A/E=1.18 with age-band bias), and drifted (Model C, trained on a shifted population). The comparison is the library's automated 5-test suite against a manual 4-check checklist. See `benchmarks/benchmark_insurance_governance.py` for the full script.
-
-**Runtime.** On an 8,000-row validation set:
+Benchmarked on Databricks (2026-03-16) using synthetic UK motor data: 20,000 training + 8,000 validation policies, three model scenarios — well-specified (Model A), miscalibrated (Model B, A/E=1.18 with age-band bias), and drifted (Model C, trained on a shifted population). Full script: `benchmarks/benchmark_insurance_governance.py`.
 
 | Approach | Time |
 |----------|------|
 | Manual 4-check checklist | 0.09s |
-| Automated 5-test suite (Gini + bootstrap CI, A/E + Poisson CI, Hosmer-Lemeshow, lift chart, PSI) | 1.17s |
+| Automated 5-test suite | 1.17s |
 
-The automated suite is ~13× slower in wall clock time; that 1-second overhead is entirely the 500-resample bootstrap for the Gini confidence interval.
+The 1-second overhead is entirely the 500-resample bootstrap for the Gini CI.
 
-**What the automated suite catches that the manual checklist misses.**
+**What the automated suite catches that manual does not.**
 
-The key test is Model B (miscalibrated). Both methods flag the A/E deviation. But only the automated suite runs Hosmer-Lemeshow, which detects the age-band-level miscalibration that averages out in the global A/E: HL p < 0.0001 (reject calibration by group). The manual checklist, which computes one aggregate A/E number, cannot surface this pattern without additional code.
+Model B (miscalibrated): both methods flag the A/E deviation. Only the automated suite runs Hosmer-Lemeshow, which detects the age-band-level miscalibration that averages out in the global A/E: HL p < 0.0001. A manual checklist computing one aggregate A/E number cannot surface this pattern without additional code.
 
-For Model C (drifted population), PSI on the score distribution = 0.189 — below the 0.25 threshold, so the manual checklist passes on PSI. Only the automated suite catches the drift, because it attaches a Poisson confidence interval to the A/E ratio: the CI excludes 1.0, flagging genuine miscalibration that the manual aggregate A/E misses. PSI alone is not sufficient to detect this type of drift; the confidence-interval-based A/E test is what surfaces it.
+Model C (drifted): PSI = 0.189 — below the 0.25 threshold, so the manual checklist passes on PSI. The automated suite catches it because the A/E CI excludes 1.0. PSI alone is not sufficient to detect this type of drift.
 
 | Scenario | Manual verdict | Automated verdict | Key diagnostic |
 |----------|---------------|-------------------|----------------|
 | Model A (well-specified) | 4/4 pass | 5/5 pass | Gini CI, A/E CI both tight |
 | Model B (miscalibrated) | Flags A/E | Flags A/E + HL | HL p<0.0001 — age-band bias |
-| Model C (drifted) | Passes PSI | Flags A/E CI | PSI=0.189 (below 0.25 threshold — manual checklist passes); A/E CI excludes 1.0 |
+| Model C (drifted) | Passes PSI | Flags A/E CI | PSI=0.189 (below threshold); A/E CI excludes 1.0 |
 
-The runtime difference does not matter in practice — governance validation runs once per model release, not in a hot loop. The return is consistent, audit-ready output for all three scenarios: every test produces a `TestResult` with `passed`, `severity`, and a detail string ready for a validation pack.
+---
 
+## Databricks Notebook
 
-## Related Libraries
+A ready-to-run Databricks notebook is available in [burning-cost-examples](https://github.com/burning-cost/burning-cost-examples/blob/main/notebooks/insurance_governance_demo.py).
+
+---
+
+## When to use / when not to use
+
+**Use this when** you have 10+ production pricing models and want consistent, auditable validation and governance output rather than bespoke analyst notebooks that vary by model. Particularly useful before a PRA supervisory visit or ahead of a Consumer Duty fair value assessment cycle.
+
+**Do not use this for** reserving or capital model governance — this package is scoped to pricing models. It does not replace independent human review of validation results; it automates the tests, not the judgement.
+
+---
+
+## Related libraries
 
 | Library | Description |
 |---------|-------------|
 | [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | Model drift detection — ongoing monitoring evidence feeds into governance review cycles |
 | [insurance-fairness](https://github.com/burning-cost/insurance-fairness) | Proxy discrimination auditing — fairness audit outputs are a required input to the governance sign-off pack |
-| [insurance-deploy](https://github.com/burning-cost/insurance-deploy) | Champion/challenger deployment with ENBP audit logging — governance documents the model; deploy manages its lifecycle |
+| [insurance-conformal](https://github.com/burning-cost/insurance-conformal) | Distribution-free prediction intervals with finite-sample coverage guarantees, for PRA SS1/23 validation packs |
+
+---
 
 ## Licence
 
