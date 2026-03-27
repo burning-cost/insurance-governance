@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Python](https://img.shields.io/pypi/pyversions/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Tests](https://github.com/burning-cost/insurance-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/burning-cost/insurance-governance/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-MIT-green)]()
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/burning-cost/insurance-governance/blob/main/LICENSE)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 [![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](https://nbviewer.org/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
 
@@ -112,8 +112,6 @@ from insurance_governance.mrm import ModelCard as MRMModelCard, RiskTierScorer, 
 ```
 
 ---
-
-If this is useful, a ⭐ on GitHub helps others find it.
 
 ## Note on ModelCard
 
