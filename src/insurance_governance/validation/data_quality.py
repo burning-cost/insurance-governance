@@ -241,7 +241,7 @@ class DataQualityReport:
         cat_cols = [
             col
             for col in self._df.columns
-            if self._df[col].dtype in (pl.Utf8, pl.String, pl.Boolean, pl.Categorical)
+            if self._df[col].dtype in (pl.String, pl.String, pl.Boolean, pl.Categorical)
         ]
 
         for col in cat_cols:

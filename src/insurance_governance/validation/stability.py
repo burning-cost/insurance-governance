@@ -268,13 +268,13 @@ class StabilityReport:
             else:
                 # Categorical PSI: frequency per category
                 ref_counts = (
-                    reference_df.select(pl.col(feat).cast(pl.Utf8))
+                    reference_df.select(pl.col(feat).cast(pl.String))
                     .group_by(feat)
                     .len()
                     .rename({"len": "ref_count"})
                 )
                 cur_counts = (
-                    current_df.select(pl.col(feat).cast(pl.Utf8))
+                    current_df.select(pl.col(feat).cast(pl.String))
                     .group_by(feat)
                     .len()
                     .rename({"len": "cur_count"})

@@ -192,7 +192,7 @@ class DiscriminationReport:
 
     def _cramers_v(self, x: pl.Series, y: pl.Series) -> float:
         """Cramer's V association statistic for two categorical series."""
-        df_pair = pl.DataFrame({"x": x.cast(pl.Utf8), "y": y.cast(pl.Utf8)}).drop_nulls()
+        df_pair = pl.DataFrame({"x": x.cast(pl.String), "y": y.cast(pl.String)}).drop_nulls()
         if len(df_pair) < 3:
             return 0.0
         n = len(df_pair)
