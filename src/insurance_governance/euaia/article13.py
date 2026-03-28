@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, ClassVar
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -43,20 +43,34 @@ def _gini_coefficient(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     if n == 0:
         return float("nan")
 
+    # Standard actuarial Gini: sort by predicted descending, compute
+    # normalised area between the ordered Lorenz curve and the diagonal.
     order = np.argsort(y_pred)
     y_sorted = y_true[order]
 
-    cum_true = np.cumsum(y_sorted)
-    total_true = cum_true[-1]
-
+    total_true = y_sorted.sum()
     if total_true == 0:
         return float("nan")
 
-    lorenz = cum_true / total_true
-    # Area under the Lorenz curve via trapezoidal rule
-    steps = np.arange(1, n + 1) / n
-    auc_lorenz = float(np.trapz(lorenz, steps))
-    return 2.0 * auc_lorenz - 1.0
+    # Cumulative share of actual, sorted by predicted ascending
+    cum_true = np.cumsum(y_sorted) / total_true
+    # Prepend 0 for the full Lorenz curve (from origin)
+    lorenz = np.concatenate(([0.0], cum_true))
+    steps = np.linspace(0, 1, n + 1)
+
+    # Area under actual model's Lorenz curve
+    auc_model = float(np.trapezoid(lorenz, steps))
+    # Area under perfect model (sort by actual descending)
+    perfect_order = np.argsort(y_true)
+    cum_perfect = np.cumsum(y_true[perfect_order]) / total_true
+    lorenz_perfect = np.concatenate(([0.0], cum_perfect))
+    auc_perfect = float(np.trapezoid(lorenz_perfect, steps))
+
+    # Normalised Gini = (model AUC - random AUC) / (perfect AUC - random AUC)
+    auc_random = 0.5
+    if abs(auc_perfect - auc_random) < 1e-12:
+        return 0.0
+    return (auc_model - auc_random) / (auc_perfect - auc_random)
 
 
 def _bootstrap_ci(
@@ -334,7 +348,7 @@ class Article13Document:
     # Gap detection                                                        #
     # ------------------------------------------------------------------ #
 
-    _REQUIRED_FIELDS: list[str] = [
+    _REQUIRED_FIELDS: ClassVar[list[str]] = [
         "provider_name",
         "provider_contact",
         "model_name",
@@ -345,7 +359,7 @@ class Article13Document:
         "override_procedure",
     ]
 
-    _REQUIRED_NONEMPTY: list[str] = [
+    _REQUIRED_NONEMPTY: ClassVar[list[str]] = [
         "out_of_scope_uses",
         "known_risks",
         "explanation_tools",
