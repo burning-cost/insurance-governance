@@ -1,14 +1,16 @@
 """insurance-governance: unified model governance for UK insurance pricing.
 
-Merges model validation (insurance-validation) and model risk
-management (insurance-mrm) into a single package.
+Merges model validation (insurance-validation), model risk management
+(insurance-mrm), and EU AI Act compliance (euaia) into a single package.
 
-Two subpackages, one install:
+Three subpackages, one install:
 
 - ``insurance_governance.validation`` — statistical validation tests, Gini,
   PSI, discrimination checks, HTML report generation.
 - ``insurance_governance.mrm`` — ModelCard, ModelInventory, RiskTierScorer,
   GovernanceReport for Model Risk Committee packs.
+- ``insurance_governance.euaia`` — Article 13 transparency documents,
+  Annex VI conformity assessment, and Annex III scope classification.
 
 Most commonly used classes are re-exported at the top level for convenience::
 
@@ -22,6 +24,10 @@ Most commonly used classes are re-exported at the top level for convenience::
         ModelInventory,
         RiskTierScorer,
         GovernanceReport,
+        # EU AI Act
+        AIActClassifier,
+        Article13Document,
+        ConformityAssessment,
     )
 """
 
@@ -52,6 +58,18 @@ from .mrm import (
 )
 from .mrm import ModelCard as MRMModelCard
 
+# EU AI Act subpackage
+from .euaia import (
+    AIActClassifier,
+    Article13Document,
+    ClassificationResult,
+    ConformityAssessment,
+    AssessmentStep,
+    RiskClassification,
+    ModelType,
+    StepStatus,
+)
+
 from importlib.metadata import version, PackageNotFoundError
 
 try:
@@ -81,5 +99,14 @@ __all__ = [
     "RiskTierScorer",
     "TierResult",
     "GovernanceReport",
+    # EU AI Act
+    "AIActClassifier",
+    "Article13Document",
+    "ClassificationResult",
+    "ConformityAssessment",
+    "AssessmentStep",
+    "RiskClassification",
+    "ModelType",
+    "StepStatus",
     "__version__",
 ]

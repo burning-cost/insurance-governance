@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "insurance-governance"
-version = "0.1.8"
-description = "Model risk management and SS1/23-aligned validation for UK insurance pricing: actuarial model governance, MRM reports, and PRA/FCA compliance"
+version = "0.1.9"
+description = "Model risk management, SS1/23 validation, and EU AI Act compliance for UK insurance pricing"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -22,6 +22,9 @@ keywords = [
     "MRM",
     "governance",
     "pricing",
+    "EU AI Act",
+    "Article 13",
+    "conformity assessment",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
