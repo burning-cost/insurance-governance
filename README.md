@@ -106,6 +106,20 @@ The 1-second overhead over a manual checklist is entirely the 500-resample Gini 
 
 ---
 
+## freMTPL2 real-data benchmark
+
+**[notebooks/benchmark_fremtpl2.py](notebooks/benchmark_fremtpl2.py)** — Databricks notebook running the full validation suite on freMTPL2 (OpenML 41214), 677,991 French MTPL policies.
+
+This is the benchmark to look at if you want to understand what validation outputs look like on real data — not synthetic. It runs a Poisson GLM and a CatBoost GBM on the same dataset and produces side-by-side PRA SS1/23-aligned reports.
+
+Key findings from the real-data benchmark:
+
+- **Gini is lower than synthetic data suggests.** Real-world motor frequency models achieve Gini of 0.15–0.30 (GLM) and 0.25–0.40 (GBM) on heterogeneous populations. Synthetic benchmarks with clean DGPs produce inflated Gini values. Calibrate your Green/Amber/Red thresholds to your actual portfolio.
+- **Hosmer-Lemeshow catches what global A/E misses.** On 677K rows, H-L has power to detect systematic miscalibration that averages out in a single A/E ratio. The GLM's exclusion of categorical features leaves residuals in urban/young-driver segments — invisible in global A/E, visible in H-L.
+- **The governance API is model-agnostic.** `ModelValidationReport` takes a numpy array. It does not care whether that array came from statsmodels, CatBoost, or anything else. The same validation structure applies to both models without modification.
+
+---
+
 ## Key classes
 
 **Validation**
@@ -129,9 +143,10 @@ Takes validation outputs from [insurance-monitoring](https://github.com/burning-
 
 ---
 
-## Databricks notebook
+## Databricks notebooks
 
-Ready-to-run demo with synthetic UK motor data: [burning-cost-examples](https://github.com/burning-cost/burning-cost-examples/blob/main/notebooks/insurance_governance_demo.py).
+- **Synthetic data demo** — [burning-cost-examples](https://github.com/burning-cost/burning-cost-examples/blob/main/notebooks/insurance_governance_demo.py): full end-to-end workflow on 50K synthetic UK motor policies.
+- **Real-data benchmark** — [notebooks/benchmark_fremtpl2.py](notebooks/benchmark_fremtpl2.py): Poisson GLM vs CatBoost GBM on freMTPL2 (677K French MTPL rows, OpenML 41214). Shows what validation outputs look like in practice.
 
 ---
 
