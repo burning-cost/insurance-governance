@@ -1,7 +1,7 @@
 """insurance_governance.validation: model validation aligned with the principles of PRA SS1/23 (as adapted for insurance).
 
 Aligned with the principles of PRA SS1/23 (as adapted for insurance), FCA Consumer Duty,
-and FCA TR24/2 pricing governance requirements.
+and FCA Consumer Duty (FG22/5) pricing governance requirements.
 
 Quick start (high-level API)
 -----------------------------

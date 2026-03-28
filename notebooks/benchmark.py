@@ -831,7 +831,7 @@ for i, rec in enumerate(gov_dict["recommendations"], 1):
 # MAGIC **Regulatory positioning:**
 # MAGIC
 # MAGIC The validation tests are structured around PRA SS1/23 Principles 1-5 (applied by analogy to insurance; your direct regulatory basis will be PS12/22 or equivalent). The model card fields
-# MAGIC map to FCA TR24/2 pricing governance documentation requirements. The risk tier
+# MAGIC map to FCA Consumer Duty (PRIN 2A, FG22/5) pricing governance documentation requirements. The risk tier
 # MAGIC thresholds (Tier 1 ≥ 60 pts, Tier 2 ≥ 30 pts) are calibrated to UK personal
 # MAGIC lines practice. You can override thresholds at construction time if your
 # MAGIC internal policy differs — but document why.

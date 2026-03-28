@@ -1,7 +1,7 @@
 """
 Fairness and proxy discrimination testing for UK insurance pricing models.
 
-This module implements the FCA Consumer Duty and TR24/2 discrimination checks.
+This module implements the FCA Consumer Duty discrimination checks.
 The focus is on proxy discrimination: using variables that are correlated with
 protected characteristics (age, gender, ethnicity, disability) may produce
 discriminatory outcomes even if the protected characteristic itself is excluded.
@@ -10,7 +10,7 @@ Postcode is the canonical insurance example: postcodes correlate with
 ethnicity, and using postcode relativities without analysis creates disparate
 impact risk.
 
-The renewal cohort A/E test is an FCA TR24/2 requirement: renewal pricing
+The renewal cohort A/E test addresses the FCA's Consumer Duty loyalty penalty concern: renewal pricing
 must not systematically over-charge long-standing customers. We test A/E
 by tenure band and flag divergence outside [0.85, 1.15].
 
@@ -341,7 +341,7 @@ class DiscriminationReport:
         """
         Compute A/E ratio by customer tenure band.
 
-        FCA TR24/2 requires that renewal pricing is not systematically
+        FCA Consumer Duty (PRIN 2A) requires that renewal pricing is not systematically
         biased against long-standing customers (the "loyalty penalty"
         concern). This test checks that the model A/E ratio is consistent
         across tenure bands.
@@ -439,7 +439,7 @@ class DiscriminationReport:
             verdict = (
                 f"A/E outside [{ae_low}, {ae_high}] in bands: {', '.join(failing_bands)}. "
                 "Review whether the model systematically under- or over-prices renewal business. "
-                "FCA TR24/2 requires documented justification for pricing differentials by tenure."
+                "FCA Consumer Duty (PRIN 2A) requires documented justification for pricing differentials by tenure."
             )
 
         return TestResult(
