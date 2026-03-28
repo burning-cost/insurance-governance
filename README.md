@@ -150,6 +150,17 @@ Takes validation outputs from [insurance-monitoring](https://github.com/burning-
 
 ---
 
+## See Also
+
+| Library | What it does |
+|---------|-------------|
+| [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | PSI, A/E ratios, Gini drift test — the ongoing monitoring that triggers governance reviews |
+| [insurance-fairness](https://github.com/burning-cost/insurance-fairness) | FCA Consumer Duty proxy discrimination audit — fairness results feed directly into governance packs |
+| [insurance-conformal](https://github.com/burning-cost/insurance-conformal) | Distribution-free prediction intervals with PRA SS1/23 SCR documentation |
+| [insurance-gam](https://github.com/burning-cost/insurance-gam) | Interpretable GAM models whose shape functions are directly auditable by a pricing committee |
+
+---
+
 ## Licence
 
 MIT
