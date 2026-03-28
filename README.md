@@ -3,8 +3,26 @@
 Automated statistical validation and MRM governance pack generation for UK pricing models — so your next PRA supervisory visit has consistent, auditable evidence across every model in production, not a folder of bespoke analyst notebooks.
 
 [![PyPI](https://img.shields.io/pypi/v/insurance-governance)](https://pypi.org/project/insurance-governance/)
+[![Downloads](https://img.shields.io/pypi/dm/insurance-governance)](https://pypi.org/project/insurance-governance/)
 [![Python](https://img.shields.io/pypi/pyversions/insurance-governance)](https://pypi.org/project/insurance-governance/)
+[![Tests](https://github.com/burning-cost/insurance-governance/actions/workflows/tests.yml/badge.svg)](https://github.com/burning-cost/insurance-governance/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/burning-cost/insurance-governance/blob/main/LICENSE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/burning-cost/burning-cost-examples/blob/main/notebooks/burning-cost-in-30-minutes.ipynb)
+[![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](https://nbviewer.org/github/burning-cost/insurance-governance/blob/main/notebooks/quickstart.ipynb)
+
+**Blog post:** [Automated MRM Governance for UK Insurance Pricing Models](https://burning-cost.github.io/2026/03/21/automated-mrm-governance-uk-insurance/)
+
+---
+
+## Features
+
+- **Five-test validation suite** — Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI; same structure for every model
+- **MRM governance packs** — self-contained HTML with risk tier rationale, assumptions register, approval history; print-to-PDF in under 1 second
+- **Risk tier scoring** — 6-dimension composite (GWP materiality, complexity, external data, validation recency, drift history, regulatory exposure); 0–100 score with documented rationale
+- **Model inventory** — JSON file checked into git; tracks validation history, overdue reviews, and approval chains
+- **Fairness integration** — accepts fairness audit results from insurance-fairness as a governance pack section
+- **RAG status** — green/amber/red status per test and overall; monitoring triggers configurable per model
+- **Regulatory mapping** — PS12/22, Solvency II, EIOPA, SS1/23 cross-references baked into the HTML output
 
 ---
 
