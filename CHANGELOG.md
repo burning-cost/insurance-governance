@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.10] - 2026-03-31
+
+### Changed
+- Corrected SS1/23 regulatory framing throughout: SS1/23 is a banking supervisory statement and does not apply directly to Solvency II insurers. All documentation now uses "aligned with SS1/23 best practice" language rather than implying direct applicability.
+- Added Consumer Duty (PRIN 2A) and TR24/2 as the primary mandatory regulatory hooks for GI pricing model governance in README and governance pack template.
+- Added PRA SoP3/24 (IMOR annual attestation) as the PRA-side governance expectation in README regulatory framework table.
+- Updated pyproject.toml description and keywords to reflect Consumer Duty, TR24/2, SoP3/24, and IMOR rather than SS1/23 as the primary framing.
+- Updated report.html.j2 template: regulatory reference table now cites Consumer Duty (PRIN 2A) + TR24/2 for performance validation and model inventory; SS1/23 references replaced with "good MRM practice (aligned with SS1/23 best practice)" framing; report header and footer updated.
+- Updated CONTRIBUTING.md: clarified that SS1/23 citations in code should use "aligned with SS1/23 best practice" language.
+- Updated source module docstrings to use consistent "aligned with SS1/23 best practice" phrasing.
+
+
 ## [0.1.5] - 2026-03-23
 
 ### Fixed
@@ -27,7 +39,7 @@
 - Fix P1 bugs: exposure in A/E ratio, HL degrees of freedom, tier assignment order, Tier 4 dead code
 - Fix docs workflow: use pdoc not pdoc3 syntax (no --html flag)
 - Add pdoc API documentation workflow with GitHub Pages deployment
-- Add benchmark: automated PRA SS1/23 validation vs manual checklist
+- Add benchmark: automated MRM governance validation vs manual checklist
 - fix: add insurance-fairness to dev deps for fairness test coverage
 - Improve test coverage from 66% to 77% by testing dependency code paths
 - Fix ModelInventory._save_registry on Databricks serverless (v0.1.1)
@@ -35,4 +47,3 @@
 - docs: add Databricks notebook link
 - Add Related Libraries section to README
 - Merge branch 'main' of https://github.com/burning-cost/insurance-governance
-

@@ -1,5 +1,8 @@
 """
-ModelValidationReport: high-level facade for model validation aligned with the principles of PRA SS1/23 (as adapted for insurance).
+ModelValidationReport: high-level facade for model validation for UK GI pricing models.
+
+Structured to meet Consumer Duty (PRIN 2A), TR24/2, and PRA SoP3/24 evidence requirements.
+Follows SS1/23 best practice by analogy — see module docstring for regulatory context.
 
 This is the primary entry point for most users. It accepts your model,
 training data, and validation data, runs all standard checks, and produces
@@ -76,7 +79,10 @@ except ImportError:
 
 class ModelValidationReport:
     """
-    Model validation report generator, structured around the principles of PRA SS1/23 (as adapted for insurance).
+    Model validation report generator for UK GI pricing models.
+
+    Structured to produce evidence for Consumer Duty (PRIN 2A), TR24/2, and PRA SoP3/24
+    annual attestation (IMOR). The test suite follows SS1/23 best practice by analogy.
 
     Runs all standard validation checks and produces an HTML report plus
     a JSON sidecar. The HTML is completely self-contained (no CDN, no JS).
@@ -324,7 +330,7 @@ class ModelValidationReport:
         else:
             details = (
                 "Monitoring plan incomplete: no named owner. "
-                "Good MRM practice (aligned with SS1/23 Principle 5) requires a named individual responsible for "
+                "Good MRM practice (and Consumer Duty governance expectations) requires a named individual responsible for "
                 "ongoing monitoring. Assign an owner before production sign-off."
             )
 

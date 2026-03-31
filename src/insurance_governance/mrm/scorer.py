@@ -2,8 +2,8 @@
 
 The scorer maps six dimensions onto a 0-100 composite score. The score
 determines the tier (1 = Critical/Material, 2 = Significant, 3 = Informational).
-Weights and thresholds are configurable but the defaults reflect the principles of PRA SS1/23 (as adapted for insurance)
-Principle 1 expectations and UK personal lines calibration.
+Weights and thresholds are configurable but the defaults reflect good MRM practice aligned with
+SS1/23 best practice (Principle 1) and UK personal lines calibration.
 
 Why a scorecard rather than a decision tree? A scorecard produces a continuous
 score that changes incrementally as circumstances change, and generates a
@@ -155,7 +155,7 @@ class RiskTierScorer:
     The scorer is stateless — call :meth:`score` as many times as you like.
     Weights and thresholds can be overridden at construction time or per-call.
 
-    Default weights sum to 100 and reflect PRA SS1/23 Principle 1 expectations (applied by analogy to insurance MRM).
+    Default weights sum to 100 and reflect good MRM practice aligned with SS1/23 best practice (Principle 1).
 
     Args:
         weights: Override dimension weights. Must have the same keys as

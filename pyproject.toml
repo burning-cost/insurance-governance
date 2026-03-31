@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "insurance-governance"
-version = "0.1.9"
-description = "Model risk management, SS1/23 validation, and EU AI Act compliance for UK insurance pricing"
+version = "0.1.10"
+description = "Model risk management and MRM governance packs for UK GI pricing — Consumer Duty, TR24/2, and SS1/23 best-practice aligned"
 readme = "README.md"
 license = "MIT"
 authors = [
@@ -18,13 +18,14 @@ keywords = [
     "actuarial",
     "PRA",
     "FCA",
+    "Consumer Duty",
+    "TR24/2",
+    "SoP3/24",
     "SS1/23",
     "MRM",
     "governance",
     "pricing",
-    "EU AI Act",
-    "Article 13",
-    "conformity assessment",
+    "IMOR",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

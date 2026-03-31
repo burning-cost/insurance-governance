@@ -3,7 +3,7 @@
 #   # COMMAND ----------  separates cells
 #   # MAGIC %md           starts a markdown cell line
 #
-# Capability demo: SS1/23-aligned (insurance adaptation) validation report + MRM governance pack
+# Capability demo: Consumer Duty and SS1/23 best-practice aligned validation report + MRM governance pack
 # using insurance-governance on synthetic UK motor data.
 #
 # Run top-to-bottom on Databricks Free Edition (DBR 14.x+).
@@ -11,11 +11,11 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC # insurance-governance: SS1/23-aligned Validation + MRM Demo (Insurance)
+# MAGIC # insurance-governance: Consumer Duty and SS1/23 best-practice Validation + MRM Demo (Insurance)
 # MAGIC
 # MAGIC **Package:** `insurance-governance` — unified model governance for UK insurance pricing.
 # MAGIC Two subpackages, one install:
-# MAGIC - `insurance_governance.validation` — SS1/23-aligned statistical validation (as adapted for insurance): Gini, PSI,
+# MAGIC - `insurance_governance.validation` — statistical validation aligned with Consumer Duty (PRIN 2A) and SS1/23 best practice: Gini, PSI,
 # MAGIC   Hosmer-Lemeshow, lift charts, discrimination checks. Self-contained HTML reports.
 # MAGIC - `insurance_governance.mrm` — Model risk management: `ModelCard`, `RiskTierScorer`,
 # MAGIC   `ModelInventory`, `GovernanceReport` (exec committee pack).
@@ -28,7 +28,7 @@
 # MAGIC 5. Generate a `GovernanceReport` — exec committee pack, print-to-PDF ready
 # MAGIC
 # MAGIC **What this replaces:** bespoke Word validation reports, Excel scorecard workbooks,
-# MAGIC informal Confluence governance pages. One package gives you a structured, auditable paper trail consistent with SS1/23 principles (as adapted for insurance).
+# MAGIC informal Confluence governance pages. One package gives you a structured, auditable paper trail consistent with Consumer Duty and SS1/23 best-practice MRM principles.
 # MAGIC
 # MAGIC **Date:** 2026-03-13
 # MAGIC **Library version:** 0.1.0
@@ -166,7 +166,7 @@ print(f"Validation predictions   mean: {y_pred_val.mean():.4f}  std: {y_pred_val
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 3. Validation report (SS1/23-aligned)
+# MAGIC ## 3. Validation report (Consumer Duty and SS1/23 best-practice aligned)
 # MAGIC
 # MAGIC `ModelValidationReport` is the high-level facade. Pass it the model card and
 # MAGIC predictions, call `generate()`, and it produces a fully self-contained HTML report.
@@ -802,7 +802,7 @@ for i, rec in enumerate(gov_dict["recommendations"], 1):
 # MAGIC
 # MAGIC **When to use insurance-governance:**
 # MAGIC
-# MAGIC - Your MRM framework references SS1/23 principles (as many UK insurer frameworks do) and you need an auditable, consistent validation
+# MAGIC - Your MRM framework references SS1/23 best practice by analogy (as many UK insurer frameworks do) and you need an auditable, consistent validation
 # MAGIC   process — not a bespoke analyst notebook that varies by model.
 # MAGIC - You have 10+ production pricing models and no structured MRM inventory.
 # MAGIC   Tracking tier, RAG status, and review dates in a spreadsheet is where things slip.
@@ -815,7 +815,7 @@ for i, rec in enumerate(gov_dict["recommendations"], 1):
 # MAGIC
 # MAGIC | Before | After |
 # MAGIC |--------|-------|
-# MAGIC | Bespoke validation notebook per model | `ModelValidationReport` — consistent SS1/23-aligned checks across the portfolio |
+# MAGIC | Bespoke validation notebook per model | `ModelValidationReport` — consistent Consumer Duty-aligned checks across the portfolio |
 # MAGIC | Manual Word/PowerPoint validation report | Self-contained HTML, print-to-PDF |
 # MAGIC | Excel scorecard for risk tier assignment | `RiskTierScorer` — documented rules, 6-dimension scorecard, full rationale |
 # MAGIC | Sharepoint spreadsheet model inventory | `ModelInventory` — JSON-backed, version-controlled |
@@ -830,7 +830,7 @@ for i, rec in enumerate(gov_dict["recommendations"], 1):
 # MAGIC
 # MAGIC **Regulatory positioning:**
 # MAGIC
-# MAGIC The validation tests are structured around PRA SS1/23 Principles 1-5 (applied by analogy to insurance; your direct regulatory basis will be PS12/22 or equivalent). The model card fields
+# MAGIC The validation tests follow Consumer Duty (PRIN 2A) and TR24/2 requirements, and follow SS1/23 best practice by analogy. SS1/23 is directed at banks; your direct regulatory basis as a GI insurer is PRIN 2A, TR24/2, and PRA SoP3/24. The model card fields
 # MAGIC map to FCA Consumer Duty (PRIN 2A, FG22/5) pricing governance documentation requirements. The risk tier
 # MAGIC thresholds (Tier 1 ≥ 60 pts, Tier 2 ≥ 30 pts) are calibrated to UK personal
 # MAGIC lines practice. You can override thresholds at construction time if your
@@ -862,7 +862,7 @@ print(f"  Champion models:      {sum(1 for r in all_models if r['champion_challe
 print(f"  Tier 1 models:        {sum(1 for r in all_models if r['materiality_tier'] == 1)}")
 print()
 print("Outputs written:")
-print("  /tmp/motor_freq_v23_validation.html   (SS1/23-aligned validation report)")
+print("  /tmp/motor_freq_v23_validation.html   (Consumer Duty and SS1/23 best-practice aligned validation report)")
 print("  /tmp/motor_freq_v23_validation.json   (JSON sidecar for MRM ingestion)")
 print("  /tmp/mrm_inventory.json               (model inventory registry)")
 print("  /tmp/motor_tppd_freq_v23_mrm_pack.html (exec committee governance pack)")

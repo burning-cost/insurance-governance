@@ -22,17 +22,17 @@ Automated statistical validation and MRM governance pack generation for UK prici
 - **Model inventory** — JSON file checked into git; tracks validation history, overdue reviews, and approval chains
 - **Fairness integration** — accepts fairness audit results from insurance-fairness as a governance pack section
 - **RAG status** — green/amber/red status per test and overall; monitoring triggers configurable per model
-- **Regulatory mapping** — PS12/22, Solvency II, EIOPA, SS1/23 cross-references baked into the HTML output
+- **Regulatory mapping** — PS12/22, Consumer Duty (PRIN 2A), TR24/2, PRA SoP3/24, and SS1/23 best-practice cross-references baked into the HTML output
 
 ---
 
 ## Why this?
 
-Under PS12/22, Solvency II validation requirements, and EIOPA guidelines, UK insurers must document model performance, assumptions, and risk tier — but nothing enforces that this documentation is comparable across models, or that the statistical tests match what SS1/23 Principle 3 describes. In practice, pricing teams with 10+ production models end up with bespoke validation notebooks that vary by analyst, Word-document MRM packs rebuilt by hand each committee cycle, and no machine-readable inventory of overdue reviews.
+UK GI pricing teams face three overlapping governance obligations: FCA Consumer Duty (PRIN 2A) and TR24/2 require documented evidence that pricing models produce fair outcomes; PRA SoP3/24 expects an annual attestation (IMOR) that model governance is sound; and most internal MRM frameworks cite SS1/23 best practice by analogy, even though that supervisory statement is technically directed at banks. In practice, pricing teams with 10+ production models end up with bespoke validation notebooks that vary by analyst, Word-document MRM packs rebuilt by hand each committee cycle, and no machine-readable inventory of overdue reviews.
 
 This library runs a five-test validation suite (Gini with bootstrap CI, A/E with Poisson CI, Hosmer-Lemeshow, lift chart, PSI) and produces MRM governance packs as self-contained HTML — the same structure for every model, every release.
 
-> **Scope:** This package is for pricing models. It does not cover reserving or capital model governance, and does not replace human review of validation results — it automates the tests, not the judgement. SS1/23 is directed at banks; many UK insurance MRM frameworks reference it by analogy. Map to your own regulatory basis.
+> **Regulatory basis for GI pricing models:** The mandatory hooks are Consumer Duty (PRIN 2A) + TR24/2 (FCA side) and PRA SoP3/24 annual attestation via IMOR (PRA side). SS1/23 is a banking supervisory statement and does not apply directly to Solvency II insurers — but it describes good model governance practice, and many UK insurer MRM frameworks reference it by analogy. This library is aligned with SS1/23 best practice where relevant; your compliance obligation is PRIN 2A, TR24/2, and SoP3/24.
 
 ---
 
@@ -46,6 +46,7 @@ This library runs a five-test validation suite (Gini with bootstrap CI, A/E with
 | Risk tier assignment | Subjective judgement in MRC pre-read | `RiskTierScorer` — 6 dimensions, 0–100 composite, documented rationale per dimension |
 | Governance pack | Word document rebuilt each cycle | `GovernanceReport.save_html()` — self-contained HTML; print-to-PDF in under 1 second |
 | Model inventory | Spreadsheet or SharePoint list | `ModelInventory` — JSON file, check into git; tracks validation history and overdue reviews |
+| Consumer Duty evidence | Narrative in committee paper | Structured fairness section + renewal cohort A/E test in every pack |
 
 ---
 
@@ -110,6 +111,18 @@ GovernanceReport(card=card, tier=tier).save_html("mrm_pack.html")
 
 ---
 
+## Regulatory framework
+
+| Obligation | Who it applies to | What it requires |
+|------------|-------------------|-----------------|
+| Consumer Duty (PRIN 2A) + TR24/2 | All GI pricing teams | Documented evidence that pricing models produce fair outcomes; proxy discrimination testing; renewal pricing fairness |
+| PRA SoP3/24 (IMOR annual attestation) | PRA-regulated insurers | Annual sign-off that model governance, validation, and monitoring are in place |
+| SS1/23 best practice | Banks (directly); insurers (by analogy) | SS1/23 is a banking supervisory statement — not mandatory for Solvency II insurers, but widely referenced in insurer MRM frameworks as good practice |
+
+This library structures its validation suite and governance packs to meet the Consumer Duty and IMOR evidence requirements, while following SS1/23 best practice where it provides useful structure.
+
+---
+
 ## What the validation suite catches
 
 Benchmarked on Databricks (2026-03-16), three synthetic UK motor scenarios: well-specified (A), miscalibrated (B, A/E=1.18 with age-band bias), drifted (C, trained on shifted population).
@@ -128,7 +141,7 @@ The 1-second overhead over a manual checklist is entirely the 500-resample Gini 
 
 **[notebooks/benchmark_fremtpl2.py](notebooks/benchmark_fremtpl2.py)** — Databricks notebook running the full validation suite on freMTPL2 (OpenML 41214), 677,991 French MTPL policies.
 
-This is the benchmark to look at if you want to understand what validation outputs look like on real data — not synthetic. It runs a Poisson GLM and a CatBoost GBM on the same dataset and produces side-by-side PRA SS1/23-aligned reports.
+This is the benchmark to look at if you want to understand what validation outputs look like on real data — not synthetic. It runs a Poisson GLM and a CatBoost GBM on the same dataset and produces side-by-side MRM governance pack reports aligned with Consumer Duty and SS1/23 best practice.
 
 Key findings from the real-data benchmark:
 
@@ -174,7 +187,7 @@ Takes validation outputs from [insurance-monitoring](https://github.com/burning-
 |---------|-------------|
 | [insurance-monitoring](https://github.com/burning-cost/insurance-monitoring) | PSI, A/E ratios, Gini drift test — the ongoing monitoring that triggers governance reviews |
 | [insurance-fairness](https://github.com/burning-cost/insurance-fairness) | FCA Consumer Duty proxy discrimination audit — fairness results feed directly into governance packs |
-| [insurance-conformal](https://github.com/burning-cost/insurance-conformal) | Distribution-free prediction intervals with PRA SS1/23 SCR documentation |
+| [insurance-conformal](https://github.com/burning-cost/insurance-conformal) | Distribution-free prediction intervals with MRM-aligned model uncertainty documentation |
 | [insurance-gam](https://github.com/burning-cost/insurance-gam) | Interpretable GAM models whose shape functions are directly auditable by a pricing committee |
 
 ---

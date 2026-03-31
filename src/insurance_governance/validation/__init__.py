@@ -1,7 +1,10 @@
-"""insurance_governance.validation: model validation aligned with the principles of PRA SS1/23 (as adapted for insurance).
+"""insurance_governance.validation: model validation for UK GI pricing models.
 
-Aligned with the principles of PRA SS1/23 (as adapted for insurance), FCA Consumer Duty,
-and FCA Consumer Duty (FG22/5) pricing governance requirements.
+Structured to meet the evidence requirements of FCA Consumer Duty (PRIN 2A) and TR24/2,
+and to support PRA SoP3/24 annual attestation (IMOR). The validation suite follows
+SS1/23 best practice by analogy — SS1/23 is a banking supervisory statement and does not
+apply directly to Solvency II insurers, but its model governance principles are widely
+referenced in UK insurer MRM frameworks.
 
 Quick start (high-level API)
 -----------------------------

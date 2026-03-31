@@ -3,7 +3,7 @@ Data quality assessment for insurance model validation.
 
 Produces structured TestResult objects for each check. The checks here
 correspond directly to the Data Quality Assessment section of a compliant
-validation report aligned with the principles of SS1/23 (as adapted for insurance).
+validation report. Aligned with SS1/23 best practice and Consumer Duty evidence requirements.
 
 Usage
 -----

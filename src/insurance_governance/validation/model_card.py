@@ -3,9 +3,8 @@ Model card schema for UK insurance pricing models.
 
 The model card is the anchor document for the validation report. It
 captures what the model is, who built it, what it is allowed to do, and
-what its known limitations are. This aligns with SS1/23 Principle 3 (as
-applied by analogy to insurance MRM) and the FCA's requirement for
-Consumer Duty fair value documentation.
+what its known limitations are. This aligns with Consumer Duty fair value documentation
+requirements (PRIN 2A, TR24/2) and follows SS1/23 best practice (Principle 3) by analogy.
 
 Usage
 -----

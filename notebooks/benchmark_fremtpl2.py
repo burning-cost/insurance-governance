@@ -3,13 +3,13 @@
 #   # COMMAND ----------  separates cells
 #   # MAGIC %md           starts a markdown cell line
 #
-# Benchmark: insurance-governance PRA SS1/23 validation on freMTPL2
+# Benchmark: insurance-governance Consumer Duty and SS1/23 best-practice validation on freMTPL2
 # (OpenML dataset 41214 — 677K French motor third-party liability claims)
 #
 # This is a real-data benchmark, not synthetic data. freMTPL2 is the standard
 # public benchmark dataset for non-life frequency models. We fit a Poisson GLM
 # and a CatBoost frequency model, then run insurance-governance's full validation
-# suite on both to produce PRA SS1/23-aligned reports.
+# suite on both to produce Consumer Duty and SS1/23 best-practice aligned reports.
 #
 # Run top-to-bottom on Databricks (DBR 14.x+).
 
@@ -32,7 +32,7 @@
 # MAGIC **What this notebook covers:**
 # MAGIC 1. Load freMTPL2 from OpenML (677K rows, no preprocessing shortcuts)
 # MAGIC 2. Fit a Poisson GLM baseline (statsmodels) and a CatBoost GBM
-# MAGIC 3. Run `ModelValidationReport` on both — full SS1/23-aligned suite
+# MAGIC 3. Run `ModelValidationReport` on both — full Consumer Duty and SS1/23 best-practice aligned suite
 # MAGIC 4. Score risk tiers and generate governance packs for both models
 # MAGIC 5. Side-by-side comparison: what the validation suite tells you about
 # MAGIC    the gap between GLM and GBM on real data
@@ -853,9 +853,9 @@ print(f"  {'Overall RAG':<26}  {glm_rag.value.upper():>20}  {gbm_rag.value.upper
 print(f"  {'Risk tier':<26}  {'Tier '+str(glm_tier.tier)+' ('+glm_tier.tier_label+')':>20}  {'Tier '+str(gbm_tier.tier)+' ('+gbm_tier.tier_label+')':>20}")
 print()
 print("Outputs written:")
-print("  /tmp/fremtpl2_glm_validation.html   — GLM PRA SS1/23-aligned validation report")
+print("  /tmp/fremtpl2_glm_validation.html   — GLM Consumer Duty and SS1/23 best-practice aligned validation report")
 print("  /tmp/fremtpl2_glm_validation.json   — GLM JSON sidecar")
-print("  /tmp/fremtpl2_gbm_validation.html   — GBM PRA SS1/23-aligned validation report")
+print("  /tmp/fremtpl2_gbm_validation.html   — GBM Consumer Duty and SS1/23 best-practice aligned validation report")
 print("  /tmp/fremtpl2_gbm_validation.json   — GBM JSON sidecar")
 print("  /tmp/fremtpl2_glm_mrm_pack.html     — GLM governance pack")
 print("  /tmp/fremtpl2_gbm_mrm_pack.html     — GBM governance pack")

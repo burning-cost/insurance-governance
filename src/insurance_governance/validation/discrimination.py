@@ -473,7 +473,7 @@ class DiscriminationReport:
         or by distribution channel). Material divergence within a segment
         suggests the model has a systematic blind spot.
 
-        This supports the principles of PRA SS1/23 Principle 4 (outcome analysis, as applied by analogy to insurance) and FCA
+        This supports the FCA Consumer Duty (PRIN 2A) outcome analysis requirements and
         Consumer Duty's requirement to demonstrate fair value by segment.
 
         Parameters
@@ -569,7 +569,7 @@ class DiscriminationReport:
         """
         Summarise predicted and (optionally) actual outcomes by subgroup.
 
-        This supports the SS1/23 principle (as applied by analogy to insurance) of evidencing that model outcomes
+        This supports the Consumer Duty principle of evidencing that model outcomes
         are understood and justified across customer segments.
 
         Parameters
