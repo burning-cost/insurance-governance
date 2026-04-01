@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Duty Outcome Testing Report: {{ model_card.model_name }}</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        @media print {
+            body { background: #fff; font-size: 11px; }
+            .no-print { display: none; }
+            .section { break-inside: avoid; }
+            .report-header { border-radius: 0; }
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #f8f9fa;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .report-header {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 8px 8px 0 0;
+        }
+        .report-header h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .report-header .subtitle { font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem; }
+        .header-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+        }
+        .header-meta-item { color: #94a3b8; }
+        .header-meta-item strong { color: #e2e8f0; }
+        .rag-banner {
+            padding: 1rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 600;
+            font-size: 0.9375rem;
+        }
+        .rag-green { background: #d1fae5; color: #065f46; }
+        .rag-amber { background: #fef3c7; color: #92400e; }
+        .rag-red   { background: #fee2e2; color: #991b1b; }
+        .rag-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        .dot-green { background: #059669; }
+        .dot-amber { background: #d97706; }
+        .dot-red   { background: #dc2626; }
+        .section {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f1f5f9;
+            padding: 0.875rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section-header h2 { font-size: 0.9375rem; font-weight: 600; color: #1e293b; }
+        .section-number {
+            width: 24px; height: 24px;
+            background: #1a1a2e; color: #fff;
+            border-radius: 50%;
+            font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .section-body { padding: 1.25rem 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
+            color: #475569;
+            white-space: nowrap;
+        }
+        td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+        tr.row-fail td { background: #fff5f5; }
+        tr.row-fail:hover td { background: #fee2e2; }
+        .badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        .badge-pass     { background: #d1fae5; color: #065f46; }
+        .badge-fail     { background: #fee2e2; color: #991b1b; }
+        .badge-info     { background: #dbeafe; color: #1e40af; }
+        .badge-warning  { background: #fef3c7; color: #92400e; }
+        .badge-critical { background: #fee2e2; color: #991b1b; }
+        .badge-price-value { background: #ede9fe; color: #5b21b6; }
+        .badge-claims   { background: #dbeafe; color: #1e40af; }
+        .badge-support  { background: #d1fae5; color: #065f46; }
+        .badge-vuln     { background: #fce7f3; color: #9d174d; }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+        .card-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem; }
+        .card-value { font-size: 0.875rem; color: #1e293b; }
+        .metric-value { font-family: 'Consolas', 'Courier New', monospace; font-size: 0.8125rem; }
+        .summary-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .stat-block { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; line-height: 1; }
+        .stat-label { font-size: 0.75rem; color: #64748b; margin-top: 0.25rem; }
+        .stat-pass { color: #059669; }
+        .stat-fail { color: #dc2626; }
+        .stat-warn { color: #d97706; }
+        .corrective-actions { margin-top: 0.5rem; padding-left: 1.25rem; }
+        .corrective-actions li { font-size: 0.8125rem; color: #991b1b; margin-bottom: 0.2rem; }
+        .details-text { color: #475569; font-size: 0.8125rem; max-width: 600px; }
+        .vuln-box {
+            background: #fdf2f8;
+            border: 1px solid #f9a8d4;
+            border-radius: 6px;
+            padding: 0.875rem 1.25rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        .vuln-box strong { color: #9d174d; }
+        .run-id { font-family: monospace; font-size: 0.7rem; color: #94a3b8; }
+        .report-footer {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        @media (max-width: 640px) {
+            .report-header { padding: 1.25rem; }
+            .section-body { padding: 1rem; }
+            .card-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Report header -->
+    <div class="report-header">
+        <h1>Consumer Duty Outcome Testing Report</h1>
+        <div class="subtitle">{{ model_card.model_name }} v{{ model_card.version }} &mdash; FCA PRIN 2A outcome monitoring</div>
+        <div class="header-meta">
+            <div class="header-meta-item"><strong>Period:</strong> {{ period }}</div>
+            <div class="header-meta-item"><strong>Generated:</strong> {{ generated_date }}</div>
+            <div class="header-meta-item"><strong>Model ID:</strong> {{ model_card.model_id }}</div>
+            <div class="header-meta-item"><strong>Portfolio:</strong> {{ model_card.portfolio_scope or 'Not specified' }}</div>
+            {% if model_card.monitoring_owner %}<div class="header-meta-item"><strong>Owner:</strong> {{ model_card.monitoring_owner }}</div>{% endif %}
+            <div class="header-meta-item"><strong>Run ID:</strong> <span class="run-id">{{ run_id }}</span></div>
+        </div>
+    </div>
+
+    <!-- RAG status banner -->
+    {% if rag_status == 'red' %}
+    <div class="rag-banner rag-red">
+        <span class="rag-dot dot-red"></span>
+        OUTCOME STATUS: RED &mdash; Critical findings require immediate action and board escalation.
+    </div>
+    {% elif rag_status == 'amber' %}
+    <div class="rag-banner rag-amber">
+        <span class="rag-dot dot-amber"></span>
+        OUTCOME STATUS: AMBER &mdash; Warning findings require documented remediation plan.
+    </div>
+    {% else %}
+    <div class="rag-banner rag-green">
+        <span class="rag-dot dot-green"></span>
+        OUTCOME STATUS: GREEN &mdash; All outcome tests passed within thresholds.
+    </div>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 1: Executive Summary -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">1</div>
+            <h2>Executive Summary</h2>
+        </div>
+        <div class="section-body">
+            {% set n_pass = results | selectattr('passed', 'equalto', true) | list | length %}
+            {% set n_fail = results | selectattr('passed', 'equalto', false) | list | length %}
+            {% set n_critical = results | selectattr('severity', 'equalto', 'critical') | selectattr('passed', 'equalto', false) | list | length %}
+            {% set n_warning = results | selectattr('severity', 'equalto', 'warning') | selectattr('passed', 'equalto', false) | list | length %}
+
+            <div class="summary-stats">
+                <div class="stat-block">
+                    <div class="stat-number">{{ results | length }}</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number stat-pass">{{ n_pass }}</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number stat-fail">{{ n_fail }}</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number stat-fail">{{ n_critical }}</div>
+                    <div class="stat-label">Critical</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-number stat-warn">{{ n_warning }}</div>
+                    <div class="stat-label">Warnings</div>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div>
+                    <div class="card-label">Reporting Period</div>
+                    <div class="card-value">{{ period }}</div>
+                </div>
+                <div>
+                    <div class="card-label">Model</div>
+                    <div class="card-value">{{ model_card.model_name }} v{{ model_card.version }}</div>
+                </div>
+                <div>
+                    <div class="card-label">Model Class</div>
+                    <div class="card-value">{{ model_card.model_class | title }}</div>
+                </div>
+                <div>
+                    <div class="card-label">Overall RAG</div>
+                    <div class="card-value"><span class="badge badge-{{ rag_status }}">{{ rag_status | upper }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2: All Outcome Test Results -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">2</div>
+            <h2>Outcome Test Results</h2>
+        </div>
+        <div class="section-body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Outcome Area</th>
+                        <th>Test Name</th>
+                        <th>Segment</th>
+                        <th>Status</th>
+                        <th>Metric</th>
+                        <th>Threshold</th>
+                        <th>Severity</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for r in results %}
+                <tr class="{{ 'row-fail' if not r.passed else '' }}">
+                    <td><span class="badge badge-{{ r.outcome | replace('_', '-') }}">{{ r.outcome | replace('_', ' ') | title }}</span></td>
+                    <td><span class="metric-value">{{ r.test_name }}</span></td>
+                    <td>{{ r.segment or '&mdash;' }}</td>
+                    <td><span class="badge {{ 'badge-pass' if r.passed else 'badge-fail' }}">{{ 'PASS' if r.passed else 'FAIL' }}</span></td>
+                    <td><span class="metric-value">{{ '%.4f' | format(r.metric_value) if r.metric_value is not none else '&mdash;' }}</span></td>
+                    <td><span class="metric-value">{{ '%.4f' | format(r.threshold) if r.threshold is not none else '&mdash;' }}</span></td>
+                    <td><span class="badge badge-{{ r.severity }}">{{ r.severity | upper }}</span></td>
+                    <td class="details-text">{{ r.details }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3: Failed Tests and Corrective Actions -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    {% set failed_results = results | selectattr('passed', 'equalto', false) | list %}
+    {% if failed_results %}
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">3</div>
+            <h2>Failed Tests and Corrective Actions</h2>
+        </div>
+        <div class="section-body">
+            {% for r in failed_results %}
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                    <span class="badge badge-{{ r.outcome | replace('_', '-') }}">{{ r.outcome | replace('_', ' ') | title }}</span>
+                    <strong style="font-size: 0.875rem;">{{ r.test_name }}</strong>
+                    {% if r.segment %}<span class="badge badge-info">{{ r.segment }}</span>{% endif %}
+                    <span class="badge badge-{{ r.severity }}">{{ r.severity | upper }}</span>
+                </div>
+                <p class="details-text" style="margin-bottom: 0.5rem;">{{ r.details }}</p>
+                {% if r.corrective_actions %}
+                <div style="font-size: 0.8125rem; font-weight: 600; color: #991b1b; margin-top: 0.5rem;">Required Actions:</div>
+                <ul class="corrective-actions">
+                    {% for action in r.corrective_actions %}
+                    <li>{{ action }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 4: Vulnerable Customer Results -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    {% set vuln_results = results | selectattr('segment', 'defined') | selectattr('segment', 'ne', none) | list %}
+    {% if vuln_results %}
+    <div class="section">
+        <div class="section-header">
+            <div class="section-number">4</div>
+            <h2>Segmented Results</h2>
+        </div>
+        <div class="section-body">
+            <div class="vuln-box">
+                <strong>Note:</strong> Results below are segment-specific. Vulnerable customer segments
+                require enhanced scrutiny under FCA Consumer Duty (PRIN 2A.2.3G) — firms must consider
+                the particular needs of customers who may be in vulnerable circumstances.
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Segment</th>
+                        <th>Outcome Area</th>
+                        <th>Test Name</th>
+                        <th>Status</th>
+                        <th>Metric</th>
+                        <th>Threshold</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for r in vuln_results %}
+                <tr class="{{ 'row-fail' if not r.passed else '' }}">
+                    <td><span class="badge badge-vuln">{{ r.segment }}</span></td>
+                    <td><span class="badge badge-{{ r.outcome | replace('_', '-') }}">{{ r.outcome | replace('_', ' ') | title }}</span></td>
+                    <td><span class="metric-value">{{ r.test_name }}</span></td>
+                    <td><span class="badge {{ 'badge-pass' if r.passed else 'badge-fail' }}">{{ 'PASS' if r.passed else 'FAIL' }}</span></td>
+                    <td><span class="metric-value">{{ '%.4f' | format(r.metric_value) if r.metric_value is not none else '&mdash;' }}</span></td>
+                    <td><span class="metric_value">{{ '%.4f' | format(r.threshold) if r.threshold is not none else '&mdash;' }}</span></td>
+                    <td class="details-text">{{ r.details }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="report-footer">
+        <span>Consumer Duty Outcome Testing Report &mdash; {{ model_card.model_name }} &mdash; Period: {{ period }}</span>
+        <span>Run ID: <span class="run-id">{{ run_id }}</span></span>
+        <span>Generated: {{ generated_date }}</span>
+    </div>
+
+</div>
+</body>
+</html>

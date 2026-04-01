@@ -1,9 +1,10 @@
 """insurance-governance: unified model governance for UK insurance pricing.
 
 Merges model validation (insurance-validation), model risk management
-(insurance-mrm), and EU AI Act compliance (euaia) into a single package.
+(insurance-mrm), EU AI Act compliance (euaia), and Consumer Duty outcome
+testing into a single package.
 
-Three subpackages, one install:
+Four subpackages, one install:
 
 - ``insurance_governance.validation`` — statistical validation tests, Gini,
   PSI, discrimination checks, HTML report generation.
@@ -11,6 +12,8 @@ Three subpackages, one install:
   GovernanceReport for Model Risk Committee packs.
 - ``insurance_governance.euaia`` — Article 13 transparency documents,
   Annex VI conformity assessment, and Annex III scope classification.
+- ``insurance_governance.outcome`` — FCA Consumer Duty outcome testing:
+  price/value metrics, claims metrics, segment comparisons, board reports.
 
 Most commonly used classes are re-exported at the top level for convenience::
 
@@ -28,6 +31,12 @@ Most commonly used classes are re-exported at the top level for convenience::
         AIActClassifier,
         Article13Document,
         ConformityAssessment,
+        # Outcome testing
+        OutcomeTestingFramework,
+        PriceValueMetrics,
+        ClaimsMetrics,
+        CustomerSegment,
+        OutcomeResult,
     )
 """
 
@@ -70,6 +79,18 @@ from .euaia import (
     StepStatus,
 )
 
+# Outcome testing subpackage
+from .outcome import (
+    OutcomeTestingFramework,
+    PriceValueMetrics,
+    ClaimsMetrics,
+    OutcomeTestingReport,
+    OutcomeResult,
+    OutcomeSuite,
+    CustomerSegment,
+    SegmentComparison,
+)
+
 from importlib.metadata import version, PackageNotFoundError
 
 try:
@@ -108,5 +129,14 @@ __all__ = [
     "RiskClassification",
     "ModelType",
     "StepStatus",
+    # Outcome testing
+    "OutcomeTestingFramework",
+    "PriceValueMetrics",
+    "ClaimsMetrics",
+    "OutcomeTestingReport",
+    "OutcomeResult",
+    "OutcomeSuite",
+    "CustomerSegment",
+    "SegmentComparison",
     "__version__",
 ]

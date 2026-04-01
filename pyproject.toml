@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "insurance-governance"
-version = "0.1.10"
+version = "0.2.0"
 description = "Model risk management and MRM governance packs for UK GI pricing — Consumer Duty, TR24/2, and SS1/23 best-practice aligned"
 readme = "README.md"
 license = "MIT"
@@ -26,6 +26,9 @@ keywords = [
     "governance",
     "pricing",
     "IMOR",
+    "outcome testing",
+    "GIPP",
+    "PRIN 2A",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -69,6 +72,7 @@ packages = ["src/insurance_governance"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/insurance_governance/validation/templates" = "insurance_governance/validation/templates"
+"src/insurance_governance/outcome/templates" = "insurance_governance/outcome/templates"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
