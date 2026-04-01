@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "insurance-governance"
-version = "0.2.0"
+version = "0.3.0"
 description = "Model risk management and MRM governance packs for UK GI pricing — Consumer Duty, TR24/2, and SS1/23 best-practice aligned"
 readme = "README.md"
 license = "MIT"
@@ -29,6 +29,9 @@ keywords = [
     "outcome testing",
     "GIPP",
     "PRIN 2A",
+    "explainability",
+    "SHAP",
+    "audit trail",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.3.0] - 2026-04-01
+
+### Added
+- New `audit/` subpackage: explainability audit trail for insurance pricing models.
+- `ExplainabilityAuditEntry`: tamper-evident dataclass capturing one model prediction
+  event. SHA-256 hash of all fields except `entry_hash` enables immutability
+  verification. Fields include SHAP feature importances, raw prediction, final
+  premium, human reviewer identity (SM&CR CF reference), override flag and reason,
+  and decision basis.
+- `ExplainabilityAuditLog`: append-only JSONL log. Supports `read_since()` filtering,
+  `verify_chain()` hash integrity check across all entries, and `export_period()` for
+  regulatory submission with a metadata header line.
+- `SHAPExplainer`: wraps the optional `shap` library. Supports tree, linear, kernel,
+  and deep explainer types. Returns signed SHAP values as plain dicts keyed by
+  feature name. `shap` is an optional dependency; raises `ImportError` with clear
+  install instructions if not present.
+- `PlainLanguageExplainer`: converts SHAP values to plain English sentences suitable
+  for FCA PRIN 2A Consumer Duty customer communications. Supports GBP/EUR/USD, per-
+  factor pound impact scaling, override and rule-fallback notes, and bullet-list output.
+- `AuditSummaryReport`: builds HTML and JSON audit summaries covering decision volume,
+  feature importance distribution (mean absolute SHAP), human override rates, per-
+  segment analysis, and hash integrity status. HTML is fully self-contained.
+- Top-level re-exports for all five audit classes added to `insurance_governance`.
+- 65+ tests in `tests/test_audit.py` covering entry creation and hash verification,
+  log operations, plain language output, report generation, and SHAPExplainer with
+  mocked shap library.
+
+### Changed
+- Version bumped from 0.2.0 to 0.3.0.
+- `pyproject.toml` keywords updated to include `explainability`, `SHAP`, `audit trail`.
+
+
 ## [0.1.10] - 2026-03-31
 
 ### Changed
@@ -38,12 +70,3 @@
 - Add Colab quickstart notebook and Open in Colab badge
 - Fix P1 bugs: exposure in A/E ratio, HL degrees of freedom, tier assignment order, Tier 4 dead code
 - Fix docs workflow: use pdoc not pdoc3 syntax (no --html flag)
-- Add pdoc API documentation workflow with GitHub Pages deployment
-- Add benchmark: automated MRM governance validation vs manual checklist
-- fix: add insurance-fairness to dev deps for fairness test coverage
-- Improve test coverage from 66% to 77% by testing dependency code paths
-- Fix ModelInventory._save_registry on Databricks serverless (v0.1.1)
-- Add shields.io badge row to README
-- docs: add Databricks notebook link
-- Add Related Libraries section to README
-- Merge branch 'main' of https://github.com/burning-cost/insurance-governance

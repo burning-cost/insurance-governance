@@ -1,10 +1,10 @@
 """insurance-governance: unified model governance for UK insurance pricing.
 
 Merges model validation (insurance-validation), model risk management
-(insurance-mrm), EU AI Act compliance (euaia), and Consumer Duty outcome
-testing into a single package.
+(insurance-mrm), EU AI Act compliance (euaia), Consumer Duty outcome
+testing, and explainability audit trail into a single package.
 
-Four subpackages, one install:
+Five subpackages, one install:
 
 - ``insurance_governance.validation`` — statistical validation tests, Gini,
   PSI, discrimination checks, HTML report generation.
@@ -14,6 +14,9 @@ Four subpackages, one install:
   Annex VI conformity assessment, and Annex III scope classification.
 - ``insurance_governance.outcome`` — FCA Consumer Duty outcome testing:
   price/value metrics, claims metrics, segment comparisons, board reports.
+- ``insurance_governance.audit`` — ExplainabilityAuditEntry, append-only
+  audit log, SHAP explainer, plain English customer summaries, and periodic
+  audit reports for regulatory submission.
 
 Most commonly used classes are re-exported at the top level for convenience::
 
@@ -37,6 +40,11 @@ Most commonly used classes are re-exported at the top level for convenience::
         ClaimsMetrics,
         CustomerSegment,
         OutcomeResult,
+        # Audit trail
+        ExplainabilityAuditEntry,
+        ExplainabilityAuditLog,
+        PlainLanguageExplainer,
+        AuditSummaryReport,
     )
 """
 
@@ -91,6 +99,15 @@ from .outcome import (
     SegmentComparison,
 )
 
+# Audit trail subpackage
+from .audit import (
+    ExplainabilityAuditEntry,
+    ExplainabilityAuditLog,
+    PlainLanguageExplainer,
+    AuditSummaryReport,
+    SHAPExplainer,
+)
+
 from importlib.metadata import version, PackageNotFoundError
 
 try:
@@ -138,5 +155,11 @@ __all__ = [
     "OutcomeSuite",
     "CustomerSegment",
     "SegmentComparison",
+    # Audit trail
+    "ExplainabilityAuditEntry",
+    "ExplainabilityAuditLog",
+    "PlainLanguageExplainer",
+    "AuditSummaryReport",
+    "SHAPExplainer",
     "__version__",
 ]
