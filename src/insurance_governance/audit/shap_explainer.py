@@ -53,6 +53,7 @@ try:
     import shap as _shap
     _SHAP_AVAILABLE = True
 except ImportError:
+    _shap = None  # type: ignore[assignment]
     _SHAP_AVAILABLE = False
 
 
