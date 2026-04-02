@@ -192,6 +192,25 @@ Takes validation outputs from [insurance-monitoring](https://github.com/burning-
 
 ---
 
+## References
+
+**Regulatory instruments**
+
+- PRA. (2023). *Model Risk Management Principles for Banks* (SS1/23). Prudential Regulation Authority, Bank of England. [www.bankofengland.co.uk/prudential-regulation/publication/2023/may/model-risk-management-principles-for-banks-ss](https://www.bankofengland.co.uk/prudential-regulation/publication/2023/may/model-risk-management-principles-for-banks-ss)
+- PRA. (2024). *Statement of Policy: Expectations for Insurers' Actuarial Function* (SoP3/24). Prudential Regulation Authority. [www.bankofengland.co.uk/prudential-regulation/publication/2024](https://www.bankofengland.co.uk/prudential-regulation/publication/2024)
+- FCA. (2023). *Consumer Duty: Final rules and guidance* (PS22/9). Financial Conduct Authority. [www.fca.org.uk/publications/policy-statements/ps22-9-new-consumer-duty](https://www.fca.org.uk/publications/policy-statements/ps22-9-new-consumer-duty)
+- FCA. (2022). *General insurance pricing practices* (PS21/5). Financial Conduct Authority.
+- FCA. (2024). *Thematic Review: Motor and home insurance pricing models* (TR24/2). Financial Conduct Authority.
+
+**Statistical validation methods**
+
+- Hosmer, D.W. & Lemeshow, S. (1980). "A goodness-of-fit test for the multiple logistic regression model." *Communications in Statistics*, 10(10), 1043–1069. [doi:10.1080/03610928008827941](https://doi.org/10.1080/03610928008827941)
+- Gini, C. (1912). "Variabilità e mutabilità." Contributo allo Studio delle Distribuzioni e delle Relazioni Statistiche. Bologna: Tipogr. di P. Cuppini. (Gini coefficient, basis for Lorenz/Gini discrimination testing.)
+- Hand, D.J. (2009). "Measuring classifier performance: a coherent alternative to the area under the ROC curve." *Machine Learning*, 77(1), 103–123. [doi:10.1007/s10994-009-5119-5](https://doi.org/10.1007/s10994-009-5119-5)
+- Yurdakul, B. (2018). "Statistical Properties of Population Stability Index." University of KwaZulu-Natal working paper. (PSI for score distribution monitoring.)
+
+---
+
 ## Licence
 
 MIT
