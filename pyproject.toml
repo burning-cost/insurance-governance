@@ -4,10 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "insurance-governance"
-version = "0.3.0"
-description = "Model risk management and MRM governance packs for UK GI pricing — Consumer Duty, TR24/2, and SS1/23 best-practice aligned"
+version = "0.3.1"
+description = "Model risk management and governance packs for UK GI insurance pricing — Solvency II, PRA CP6/24, FCA Consumer Duty, and GIPP outcome testing."
 readme = "README.md"
 license = "MIT"
+requires-python = ">=3.10"
 authors = [
     { name = "Burning Cost", email = "pricing.frontier@gmail.com" }
 ]
@@ -15,23 +16,30 @@ keywords = [
     "insurance",
     "model validation",
     "model risk management",
+    "MRM",
+    "governance",
     "actuarial",
+    "pricing",
+    "UK",
+    "personal lines",
     "PRA",
     "FCA",
     "Consumer Duty",
-    "TR24/2",
-    "SoP3/24",
-    "SS1/23",
-    "MRM",
-    "governance",
-    "pricing",
-    "IMOR",
-    "outcome testing",
+    "CP6/24",
+    "Solvency II",
     "GIPP",
     "PRIN 2A",
+    "PS22/9",
+    "outcome testing",
+    "IMOR",
     "explainability",
     "SHAP",
     "audit trail",
+    "model documentation",
+    "model inventory",
+    "back-testing",
+    "stress testing",
+    "fair value",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -42,10 +50,10 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Office/Business :: Financial",
 ]
-requires-python = ">=3.10"
 dependencies = [
     "polars>=1.0",
     "jinja2>=3.1.0",
@@ -64,11 +72,11 @@ dev = [
 shap = ["shap>=0.42.0"]
 
 [project.urls]
-Homepage = "https://burning-cost.github.io/"
+Homepage = "https://burning-cost.github.io/libraries/insurance-governance/"
+Documentation = "https://burning-cost.github.io/libraries/insurance-governance/"
 Repository = "https://github.com/burning-cost/insurance-governance"
-Changelog = "https://github.com/burning-cost/insurance-governance/releases"
-Documentation = "https://burning-cost.github.io/insurance-governance"
 "Bug Tracker" = "https://github.com/burning-cost/insurance-governance/issues"
+Changelog = "https://github.com/burning-cost/insurance-governance/releases"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/insurance_governance"]
