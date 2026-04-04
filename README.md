@@ -216,3 +216,11 @@ Part of the [Burning Cost](https://burning-cost.github.io) open-source insurance
 ## Licence
 
 MIT
+
+## Related Libraries
+
+| Library | Description |
+|---------|-------------|
+| [`insurance-fairness`](https://github.com/burning-cost/insurance-fairness) | FCA Consumer Duty and Equality Act fairness audits — the primary use-case for model validation in pricing |
+| [`insurance-monitoring`](https://github.com/burning-cost/insurance-monitoring) | Post-deployment monitoring — feeds evidence back into the governance framework |
+| [`insurance-causal`](https://github.com/burning-cost/insurance-causal) | Causal inference for pricing — validate causal claims in your model documentation |
