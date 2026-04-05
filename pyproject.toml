@@ -86,3 +86,6 @@ packages = ["src/insurance_governance"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    "ignore::pytest.PytestCollectionWarning",
+]
